@@ -10,6 +10,8 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.nikowis.services.SessionService;
 
 /**
  * Created by nikowis on 2016-08-02.
@@ -17,13 +19,16 @@ import com.vaadin.ui.themes.Reindeer;
 @SpringView
 public class HomeView extends CustomComponent implements View {
 
-    public static final String NAME = "home";
+    @Autowired
+    private SessionService sessionService;
 
-    private Label greeting = new Label("Hello there!");
+    public static final String VIEW_NAME = "home";
+
+    private Label greeting = new Label();
     private Button logout = new Button("Logout", new Button.ClickListener() {
         @Override
         public void buttonClick(Button.ClickEvent event) {
-            getUI().getNavigator().navigateTo(LoginView.NAME);
+            getUI().getNavigator().navigateTo(LoginView.VIEW_NAME);
         }
     });
 
@@ -40,10 +45,11 @@ public class HomeView extends CustomComponent implements View {
         viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
         viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
         setCompositionRoot(viewLayout);
+
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        greeting.setValue("Hello world");
+        greeting.setValue("Hello " + sessionService.getUser().getUsername());
     }
 }

@@ -1,5 +1,8 @@
 package pl.nikowis.entities;
 
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

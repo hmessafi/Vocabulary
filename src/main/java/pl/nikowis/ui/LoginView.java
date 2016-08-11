@@ -11,6 +11,9 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.nikowis.entities.User;
+import pl.nikowis.services.SessionService;
 
 /**
  * Created by nikowis on 2016-08-01.
@@ -18,48 +21,52 @@ import com.vaadin.ui.themes.Reindeer;
 @SpringView
 public class LoginView extends CustomComponent implements View{
 
-    public static final String NAME = "login";
+    public static final String VIEW_NAME = "login";
 
-    private final TextField user;
+    @Autowired
+    private SessionService sessionService;
 
-    private final PasswordField password;
+    private final TextField usernameField;
+
+    private final PasswordField passwordField;
 
     private final Button loginButton;
 
     public LoginView() {
         setSizeFull();
 
-        user = new TextField("User:");
-        user.setWidth("300px");
-        user.setRequired(true);
+        usernameField = new TextField("User:");
+        usernameField.setWidth("300px");
+        usernameField.setRequired(true);
 
-        password = new PasswordField("Password:");
-        password.setWidth("300px");
-        password.setRequired(true);
-        password.setValue("");
-        password.setNullRepresentation("");
+        passwordField = new PasswordField("Password:");
+        passwordField.setWidth("300px");
+        passwordField.setRequired(true);
+        passwordField.setValue("");
+        passwordField.setNullRepresentation("");
 
         loginButton = new Button("Login");
 
         loginButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                String username = user.getValue();
-                String pass = password.getValue();
+                String username = usernameField.getValue();
+                String password = passwordField.getValue();
 
                 boolean isValid = username.equals("user")
-                        && pass.equals("1");
+                        && password.equals("1");
 
                 if (isValid) {
-                    getUI().getNavigator().navigateTo(HomeView.NAME);
+                    sessionService.setUser(new User(username, password));
+                    getUI().getNavigator().navigateTo(HomeView.VIEW_NAME);
                 } else {
-                    password.setValue(null);
-                    password.focus();
+                    passwordField.setValue(null);
+                    passwordField.focus();
                 }
             }
         });
 
-        VerticalLayout fields = new VerticalLayout(user, password, loginButton);
+        VerticalLayout fields = new VerticalLayout(usernameField, passwordField, loginButton);
         fields.setCaption("Login to access the application.");
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
@@ -74,7 +81,7 @@ public class LoginView extends CustomComponent implements View{
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        user.focus();
+        usernameField.focus();
     }
 
 }
