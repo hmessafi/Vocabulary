@@ -4,13 +4,14 @@ package pl.nikowis.services.impl;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.CustomComponent;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import pl.nikowis.entities.User;
 import pl.nikowis.services.SessionService;
 
 /**
  * Created by nikowis on 2016-08-05.
  */
-@Component
+@Service
 public class SessionServiceImpl extends CustomComponent implements SessionService {
     private static final String USER_SESSION_ATTR_NAME="user";
 

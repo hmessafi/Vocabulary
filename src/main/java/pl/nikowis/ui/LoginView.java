@@ -1,5 +1,8 @@
 package pl.nikowis.ui;
 
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.PropertyId;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.MarginInfo;
@@ -14,27 +17,61 @@ import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.services.SessionService;
+import pl.nikowis.services.UserService;
 
 /**
  * Created by nikowis on 2016-08-01.
  */
 @SpringView
-public class LoginView extends CustomComponent implements View{
+public class LoginView extends CustomComponent implements View {
 
     public static final String VIEW_NAME = "login";
 
-    @Autowired
     private SessionService sessionService;
 
-    private final TextField usernameField;
+    private UserService userService;
 
-    private final PasswordField passwordField;
+    @PropertyId("username")
+    private TextField usernameField;
 
-    private final Button loginButton;
+    @PropertyId("password")
+    private PasswordField passwordField;
 
-    public LoginView() {
+    private Button loginButton, registerButton;
+
+    private FieldGroup fieldGroup;
+
+    private User user;
+
+    @Autowired
+    public LoginView(UserService userService, SessionService sessionService) {
+        this.userService = userService;
+        this.sessionService = sessionService;
+
+        initalizeComponents();
+
         setSizeFull();
 
+        VerticalLayout fields = new VerticalLayout(
+                usernameField
+                , passwordField
+                , loginButton
+                , registerButton
+        );
+
+        fields.setCaption("Login to access the application.");
+        fields.setSpacing(true);
+        fields.setMargin(new MarginInfo(true, true, true, false));
+        fields.setSizeUndefined();
+
+        VerticalLayout viewLayout = new VerticalLayout(fields);
+        viewLayout.setSizeFull();
+        viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
+        viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        setCompositionRoot(viewLayout);
+    }
+
+    private void initalizeComponents() {
         usernameField = new TextField("User:");
         usernameField.setWidth("300px");
         usernameField.setRequired(true);
@@ -46,37 +83,56 @@ public class LoginView extends CustomComponent implements View{
         passwordField.setNullRepresentation("");
 
         loginButton = new Button("Login");
-
         loginButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                String username = usernameField.getValue();
-                String password = passwordField.getValue();
 
-                boolean isValid = username.equals("user")
-                        && password.equals("1");
+                try {
+                    fieldGroup.commit();
+                } catch (FieldGroup.CommitException e) {
+                    e.printStackTrace();
+                }
 
-                if (isValid) {
-                    sessionService.setUser(new User(username, password));
+                if (isValid()) {
+                    sessionService.setUser(user);
                     getUI().getNavigator().navigateTo(HomeView.VIEW_NAME);
                 } else {
+
                     passwordField.setValue(null);
                     passwordField.focus();
                 }
             }
         });
 
-        VerticalLayout fields = new VerticalLayout(usernameField, passwordField, loginButton);
-        fields.setCaption("Login to access the application.");
-        fields.setSpacing(true);
-        fields.setMargin(new MarginInfo(true, true, true, false));
-        fields.setSizeUndefined();
+        registerButton = new Button("Register");
+        registerButton.setCaption("Register new user");
+        registerButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                getUI().getNavigator().navigateTo(RegisterView.VIEW_NAME);
+            }
+        });
 
-        VerticalLayout viewLayout = new VerticalLayout(fields);
-        viewLayout.setSizeFull();
-        viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
-        setCompositionRoot(viewLayout);
+        user = new User();
+
+        BeanItem<User> bean = new BeanItem<User>(user);
+        fieldGroup = new FieldGroup(bean);
+        fieldGroup.bindMemberFields(this);
+        usernameField.setValue("");
+        passwordField.setValue("");
+    }
+
+    private boolean isValid() {
+        if ( user.getUsername().equals("user") && user.getPassword().equals("1") ) {
+            return true;
+        } else {
+            User dbUser = userService.authenticateUser(user);
+            if (dbUser == null) {
+                return  false;
+            }
+            user = dbUser;
+        }
+        return  true;
     }
 
     @Override

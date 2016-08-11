@@ -6,21 +6,25 @@ import com.vaadin.ui.TextField;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * Created by nikowis on 2016-07-27.
  */
+@Entity
 public class User {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Column(unique = true)
+    @NotNull
     private String username;
 
+    @NotNull
     private String password;
 
-    @NotNull
     private String authority;
 
     private int score;
@@ -30,6 +34,12 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        score=0;
+        enabled=true;
+    }
+
+    public User() {
+
     }
 
     public String getUsername() {
