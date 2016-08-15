@@ -18,8 +18,7 @@ import pl.nikowis.services.SessionService;
 /**
  * Created by nikowis on 2016-08-02.
  */
-@SpringView
-@DependsOn
+@SpringView(name = HomeView.VIEW_NAME)
 public class HomeView extends CustomComponent implements View {
 
     private SessionService sessionService;
@@ -57,7 +56,7 @@ public class HomeView extends CustomComponent implements View {
         logout = new Button("Logout", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                sessionService.setUser(null);
+                sessionService.eraseUser();
                 getUI().getNavigator().navigateTo(LoginView.VIEW_NAME);
             }
         });

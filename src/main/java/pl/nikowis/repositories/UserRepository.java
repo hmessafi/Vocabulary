@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import pl.nikowis.entities.User;
 
 /**
+ * Repository for users.
  * Created by nikowis on 2016-08-11.
  *
  * @author nikowis

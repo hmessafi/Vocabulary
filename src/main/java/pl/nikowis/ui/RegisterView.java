@@ -88,7 +88,7 @@ public class RegisterView extends CustomComponent implements View {
             public void buttonClick(Button.ClickEvent clickEvent) {
                 try {
                     fieldGroup.commit();
-                    userService.saveUser(user);
+                    userService.createNewUser(user);
                     getUI().getNavigator().navigateTo(LoginView.VIEW_NAME);
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();

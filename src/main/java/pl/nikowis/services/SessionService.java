@@ -8,4 +8,5 @@ import pl.nikowis.entities.User;
 public interface SessionService {
     User getUser();
     void setUser(User user);
+    User eraseUser();
 }

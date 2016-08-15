@@ -22,7 +22,7 @@ import pl.nikowis.services.UserService;
 /**
  * Created by nikowis on 2016-08-01.
  */
-@SpringView
+@SpringView(name = LoginView.VIEW_NAME)
 public class LoginView extends CustomComponent implements View {
 
     public static final String VIEW_NAME = "login";
@@ -123,16 +123,12 @@ public class LoginView extends CustomComponent implements View {
     }
 
     private boolean isValid() {
-        if ( user.getUsername().equals("user") && user.getPassword().equals("1") ) {
-            return true;
-        } else {
-            User dbUser = userService.authenticateUser(user);
-            if (dbUser == null) {
-                return  false;
-            }
-            user = dbUser;
+        User dbUser = userService.authenticateUser(user);
+        if (dbUser == null) {
+            return false;
         }
-        return  true;
+        user = dbUser;
+        return true;
     }
 
     @Override

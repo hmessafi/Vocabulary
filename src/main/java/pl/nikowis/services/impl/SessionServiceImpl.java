@@ -1,7 +1,9 @@
 package pl.nikowis.services.impl;
 
 
+import com.google.gwt.thirdparty.guava.common.base.Preconditions;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.WrappedSession;
 import com.vaadin.ui.CustomComponent;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -12,16 +14,27 @@ import pl.nikowis.services.SessionService;
  * Created by nikowis on 2016-08-05.
  */
 @Service
-public class SessionServiceImpl extends CustomComponent implements SessionService {
-    private static final String USER_SESSION_ATTR_NAME="user";
+public class SessionServiceImpl implements SessionService {
+    private static final String USER_SESSION_ATTR_NAME = "user";
 
     @Override
     public User getUser() {
-       return (User) VaadinService.getCurrentRequest().getWrappedSession().getAttribute(USER_SESSION_ATTR_NAME);
+        WrappedSession session = VaadinService.getCurrentRequest().getWrappedSession();
+        return (User) session.getAttribute(USER_SESSION_ATTR_NAME);
     }
 
     @Override
     public void setUser(User user) {
-        VaadinService.getCurrentRequest().getWrappedSession().setAttribute(USER_SESSION_ATTR_NAME, user);
+        Preconditions.checkNotNull(user);
+        WrappedSession session = VaadinService.getCurrentRequest().getWrappedSession();
+        session.setAttribute(USER_SESSION_ATTR_NAME, user);
+    }
+
+    @Override
+    public User eraseUser() {
+        User user = getUser();
+        WrappedSession session = VaadinService.getCurrentRequest().getWrappedSession();
+        session.setAttribute(USER_SESSION_ATTR_NAME, null);
+        return user;
     }
 }

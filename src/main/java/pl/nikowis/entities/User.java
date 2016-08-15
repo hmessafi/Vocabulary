@@ -1,12 +1,14 @@
 package pl.nikowis.entities;
 
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by nikowis on 2016-07-27.
@@ -15,7 +17,7 @@ import java.io.Serializable;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(unique = true)
@@ -25,21 +27,20 @@ public class User {
     @NotNull
     private String password;
 
-    private String authority;
+    @OneToOne
+    private Role role;
 
     private int score;
 
     private boolean enabled;
 
+    public User() {
+
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        score=0;
-        enabled=true;
-    }
-
-    public User() {
-
     }
 
     public String getUsername() {
@@ -56,14 +57,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(String authority) {
-        this.authority = authority;
     }
 
     public boolean isEnabled() {
@@ -88,5 +81,13 @@ public class User {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
