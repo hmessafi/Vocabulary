@@ -22,4 +22,10 @@ public class RoleServiceImpl implements RoleService {
         Preconditions.checkNotNull(userRole);
         return roleRepository.save(userRole);
     }
+
+    @Override
+    public Role findOneByName(String name) {
+        Preconditions.checkNotNull(name);
+        return roleRepository.findOneByName(name);
+    }
 }

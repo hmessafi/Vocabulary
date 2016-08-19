@@ -7,6 +7,7 @@ import pl.nikowis.entities.User;
 import pl.nikowis.repositories.RoleRepository;
 import pl.nikowis.repositories.UserRepository;
 import pl.nikowis.security.UserRoles;
+import pl.nikowis.services.RoleService;
 import pl.nikowis.services.UserService;
 
 /**
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
     @Override
     public User saveUser(User user) {
@@ -44,14 +45,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createNewUser(User user) {
         Preconditions.checkNotNull(user);
-        user.setRole(roleRepository.findOneByName(UserRoles.ROLE_USER));
+        user.setRole(roleService.findOneByName(UserRoles.ROLE_USER));
         return userRepository.save(user);
     }
 
     @Override
     public User createNewAdmin(User user) {
         Preconditions.checkNotNull(user);
-        user.setRole(roleRepository.findOneByName(UserRoles.ROLE_ADMIN));
+        user.setRole(roleService.findOneByName(UserRoles.ROLE_ADMIN));
         return userRepository.save(user);
     }
 

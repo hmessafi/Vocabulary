@@ -1,9 +1,8 @@
 package pl.nikowis.ui;
 
-import com.vaadin.data.Item;
+import com.google.gwt.thirdparty.guava.common.base.Strings;
 import com.vaadin.data.Validator;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -20,9 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.services.UserService;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 /**
+ * Register page.
  * Created by nikowis on 2016-08-11.
  *
  * @author nikowis
@@ -34,16 +32,16 @@ public class RegisterView extends CustomComponent implements View {
 
     private UserService userService;
 
-    @PropertyId("username" )
-    private TextField usernameField;
+    private TextField username;
 
-    @PropertyId("password")
-    private PasswordField passwordField;
-    private PasswordField repeatPasswordField;
+    private PasswordField password;
+
+    private PasswordField repeatPassword;
     private Button submitButton;
     private FieldGroup fieldGroup;
     private User user;
 
+    @Autowired
     public RegisterView(UserService userService) {
         this.userService = userService;
 
@@ -52,9 +50,9 @@ public class RegisterView extends CustomComponent implements View {
         setSizeFull();
 
         VerticalLayout fields = new VerticalLayout(
-                usernameField
-                , passwordField
-                , repeatPasswordField
+                username
+                , password
+                , repeatPassword
                 , submitButton
         );
 
@@ -63,45 +61,46 @@ public class RegisterView extends CustomComponent implements View {
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
 
-        VerticalLayout viewLayout = new VerticalLayout(fields);
-        viewLayout.setSizeFull();
-        viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
-        setCompositionRoot(viewLayout);
+        VerticalLayout mainLayout = new VerticalLayout(fields);
+        mainLayout.setSizeFull();
+        mainLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
+        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        setCompositionRoot(mainLayout);
     }
 
     private void intializeComponents() {
-        usernameField = new TextField("Username");
-        passwordField = new PasswordField("Password");
-        repeatPasswordField = new PasswordField("Repeat password");
-        repeatPasswordField.addValidator(new Validator() {
-            @Override
-            public void validate(Object o) throws InvalidValueException {
-                if(passwordField.getValue().length()>0
-                        && !passwordField.getValue().equals(o.toString())) {
-                    throw new InvalidValueException("Passwords don't match.");
-                }
-            }
-        });
-        submitButton = new Button("Create new account", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                try {
-                    fieldGroup.commit();
-                    userService.createNewUser(user);
-                    getUI().getNavigator().navigateTo(LoginView.VIEW_NAME);
-                } catch (FieldGroup.CommitException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        username = new TextField("Username");
+        username.setNullRepresentation("");
+        password = new PasswordField("Password");
+        password.setNullRepresentation("");
+        repeatPassword = new PasswordField("Repeat password");
+        repeatPassword.addValidator(o -> validatePasswordMatch(o));
+        submitButton = new Button("Create new account");
+        submitButton.addClickListener(clickEvent -> submitAndRedirect());
         user = new User();
 
         BeanItem<User> bean = new BeanItem<User>(user);
         fieldGroup = new FieldGroup(bean);
         fieldGroup.bindMemberFields(this);
-        usernameField.setValue("");
-        passwordField.setValue("");
+
+    }
+
+    private void validatePasswordMatch(Object o) {
+        if ((password.getValue().length() > 0
+                && !password.getValue().equals(o.toString()))
+                || Strings.isNullOrEmpty(password.getValue())) {
+            throw new Validator.InvalidValueException("Passwords don't match.");
+        }
+    }
+
+    private void submitAndRedirect() {
+        try {
+            fieldGroup.commit();
+            userService.createNewUser(user);
+            getUI().getNavigator().navigateTo(LoginView.VIEW_NAME);
+        } catch (FieldGroup.CommitException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -8,6 +8,17 @@ import pl.nikowis.entities.Role;
  * @author nikowis
  */
 public interface RoleService {
-
+    /**
+     * Saves the role to the database.
+     * @param role role to save
+     * @return saved role
+     */
     Role save(Role role);
+
+    /**
+     * Finds role in database.
+     * @param name name of the role from {@link pl.nikowis.security.UserRoles}.
+     * @return role from database.
+     */
+    Role findOneByName(String name);
 }

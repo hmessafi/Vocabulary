@@ -20,6 +20,7 @@ import pl.nikowis.services.SessionService;
 import pl.nikowis.services.UserService;
 
 /**
+ * Login page.
  * Created by nikowis on 2016-08-01.
  */
 @SpringView(name = LoginView.VIEW_NAME)
@@ -31,11 +32,9 @@ public class LoginView extends CustomComponent implements View {
 
     private UserService userService;
 
-    @PropertyId("username")
-    private TextField usernameField;
+    private TextField username;
 
-    @PropertyId("password")
-    private PasswordField passwordField;
+    private PasswordField password;
 
     private Button loginButton, registerButton;
 
@@ -53,8 +52,8 @@ public class LoginView extends CustomComponent implements View {
         setSizeFull();
 
         VerticalLayout fields = new VerticalLayout(
-                usernameField
-                , passwordField
+                username
+                , password
                 , loginButton
                 , registerButton
         );
@@ -64,62 +63,58 @@ public class LoginView extends CustomComponent implements View {
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
 
-        VerticalLayout viewLayout = new VerticalLayout(fields);
-        viewLayout.setSizeFull();
-        viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
-        setCompositionRoot(viewLayout);
+        VerticalLayout mainLayout = new VerticalLayout(fields);
+        mainLayout.setSizeFull();
+        mainLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
+        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        setCompositionRoot(mainLayout);
     }
 
     private void initalizeComponents() {
-        usernameField = new TextField("User:");
-        usernameField.setWidth("300px");
-        usernameField.setRequired(true);
+        username = new TextField("User:");
+        username.setWidth("300px");
+        username.setRequired(true);
 
-        passwordField = new PasswordField("Password:");
-        passwordField.setWidth("300px");
-        passwordField.setRequired(true);
-        passwordField.setValue("");
-        passwordField.setNullRepresentation("");
+        password = new PasswordField("Password:");
+        password.setWidth("300px");
+        password.setRequired(true);
+        password.setValue("");
+        password.setNullRepresentation("");
 
         loginButton = new Button("Login");
-        loginButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-
-                try {
-                    fieldGroup.commit();
-                } catch (FieldGroup.CommitException e) {
-                    e.printStackTrace();
-                }
-
-                if (isValid()) {
-                    sessionService.setUser(user);
-                    getUI().getNavigator().navigateTo(HomeView.VIEW_NAME);
-                } else {
-
-                    passwordField.setValue(null);
-                    passwordField.focus();
-                }
-            }
-        });
+        loginButton.addClickListener(clickEvent -> commitAndAuthenticateUser());
 
         registerButton = new Button("Register");
         registerButton.setCaption("Register new user");
-        registerButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                getUI().getNavigator().navigateTo(RegisterView.VIEW_NAME);
-            }
-        });
+        registerButton.addClickListener(clickEvent ->  redirect(RegisterView.VIEW_NAME));
 
         user = new User();
 
         BeanItem<User> bean = new BeanItem<User>(user);
         fieldGroup = new FieldGroup(bean);
         fieldGroup.bindMemberFields(this);
-        usernameField.setValue("");
-        passwordField.setValue("");
+        username.setValue("");
+        password.setValue("");
+    }
+
+    private void redirect(String viewName) {
+        getUI().getNavigator().navigateTo(viewName);
+    }
+
+    private void commitAndAuthenticateUser() {
+        try {
+            fieldGroup.commit();
+        } catch (FieldGroup.CommitException e) {
+            e.printStackTrace();
+        }
+
+        if (isValid()) {
+            sessionService.setUser(user);
+            redirect(HomeView.VIEW_NAME);
+        } else {
+            password.setValue(null);
+            password.focus();
+        }
     }
 
     private boolean isValid() {
@@ -133,7 +128,7 @@ public class LoginView extends CustomComponent implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        usernameField.focus();
+        username.focus();
     }
 
 }

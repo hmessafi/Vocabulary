@@ -16,6 +16,7 @@ import pl.nikowis.entities.User;
 import pl.nikowis.services.SessionService;
 
 /**
+ * Home page.
  * Created by nikowis on 2016-08-02.
  */
 @SpringView(name = HomeView.VIEW_NAME)
@@ -26,7 +27,7 @@ public class HomeView extends CustomComponent implements View {
     public static final String VIEW_NAME = "home";
 
     private Label greeting;
-    private Button logout;
+    private Button logout, wordList;
 
     private User user;
 
@@ -38,32 +39,40 @@ public class HomeView extends CustomComponent implements View {
         initializeComponents();
 
         setSizeFull();
-        VerticalLayout fields = new VerticalLayout(greeting, logout);
+        VerticalLayout fields = new VerticalLayout(greeting, logout, wordList);
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
 
-        VerticalLayout viewLayout = new VerticalLayout(fields);
-        viewLayout.setSizeFull();
-        viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
-        setCompositionRoot(viewLayout);
+        VerticalLayout mainLayout = new VerticalLayout(fields);
+        mainLayout.setSizeFull();
+        mainLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
+        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        setCompositionRoot(mainLayout);
 
     }
 
     private void initializeComponents() {
         greeting = new Label();
-        logout = new Button("Logout", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                sessionService.eraseUser();
-                getUI().getNavigator().navigateTo(LoginView.VIEW_NAME);
-            }
-        });
+        logout = new Button("Logout");
+        logout.addClickListener(clickEvent -> eraseFromSessionAndRedirect());
+
+        wordList = new Button("Word list");
+        wordList.addClickListener(clickEvent ->  redirect(WordListView.VIEW_NAME));
+
         user = sessionService.getUser();
         if(user!=null) {
             greeting.setValue("Hello " + user.getUsername());
         }
+    }
+
+    private void redirect(String viewName) {
+        getUI().getNavigator().navigateTo(viewName);
+    }
+
+    private void eraseFromSessionAndRedirect() {
+        sessionService.eraseUser();
+        redirect(LoginView.VIEW_NAME);
     }
 
     @Override

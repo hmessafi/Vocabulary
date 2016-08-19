@@ -2,7 +2,6 @@ package pl.nikowis.security;
 
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.vaadin.navigator.View;
-import com.vaadin.spring.access.ViewAccessControl;
 import com.vaadin.spring.access.ViewInstanceAccessControl;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.UI;
@@ -12,6 +11,7 @@ import pl.nikowis.services.SessionService;
 import pl.nikowis.ui.HomeView;
 import pl.nikowis.ui.LoginView;
 import pl.nikowis.ui.RegisterView;
+import pl.nikowis.ui.WordListView;
 
 import java.util.List;
 
@@ -29,8 +29,8 @@ public class AccessChecker implements ViewInstanceAccessControl {
     private SessionService sessionService;
 
     private final List<String> permitAllViews = Lists.newArrayList(
-            LoginView.VIEW_NAME,
-            RegisterView.VIEW_NAME
+            LoginView.VIEW_NAME
+            , RegisterView.VIEW_NAME
     );
 
     private final List<String> userViews = Lists.newArrayList();
@@ -39,6 +39,7 @@ public class AccessChecker implements ViewInstanceAccessControl {
 
     private final List<String> authenticatedViews = Lists.newArrayList(
             HomeView.VIEW_NAME
+            , WordListView.VIEW_NAME
     );
 
     @Override
@@ -50,15 +51,15 @@ public class AccessChecker implements ViewInstanceAccessControl {
         if (permitAllViews.contains(s)) {
             return true;
         }
-        if (user ==null) {
+        if (user == null) {
             return false;
         }
         if (authenticatedViews.contains(s)) {
             return true;
         } else if (userViews.contains(s)) {
-
+            return user.getRole().getName().equals(UserRoles.ROLE_USER);
         } else if (adminViews.contains(s)) {
-
+            return user.getRole().getName().equals(UserRoles.ROLE_ADMIN);
         }
 
         return false;
