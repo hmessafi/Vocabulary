@@ -7,6 +7,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
+import pl.nikowis.exceptions.UndefinedViewException;
 import pl.nikowis.services.SessionService;
 import pl.nikowis.ui.HomeView;
 import pl.nikowis.ui.LoginView;
@@ -61,8 +62,7 @@ public class AccessChecker implements ViewInstanceAccessControl {
         } else if (adminViews.contains(s)) {
             return user.getRole().getName().equals(UserRoles.ROLE_ADMIN);
         }
-
-        return false;
+        throw new UndefinedViewException();
     }
 
 }
