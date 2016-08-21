@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -24,6 +23,8 @@ public class Word {
 
     @NotNull
     private String translated;
+
+    private double progress;
 
     @ManyToOne
     private User user;
@@ -60,5 +61,11 @@ public class Word {
         this.user = user;
     }
 
+    public double getProgress() {
+        return progress;
+    }
 
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
 }

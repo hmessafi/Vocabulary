@@ -20,7 +20,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.ProgressBarRenderer;
 import com.vaadin.ui.themes.Reindeer;
+import elemental.json.JsonValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.entities.Word;
@@ -95,11 +97,24 @@ public class WordListView extends CustomComponent implements View {
         initializeGridContent();
         wordsGrid.setWidthUndefined();
         wordsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        setupGridColumns();
+    }
+
+    private void setupGridColumns() {
         wordsGrid.getColumn("id").setHidden(true);
         wordsGrid.getColumn("user").setHidden(true);
         wordsGrid.getColumn("user").setEditable(false);
         wordsGrid.getColumn("delete").setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
-
+        wordsGrid.getColumn("progress").setRenderer(new ProgressBarRenderer(){
+            @Override
+            public JsonValue encode(Double value) {
+                if (value != null) {
+                    value = value / 5;
+                }
+                return super.encode(value);
+            }
+        });
+        wordsGrid.setColumnOrder("original", "translated", "progress", "delete");
     }
 
     private void initializeGridContent() {
