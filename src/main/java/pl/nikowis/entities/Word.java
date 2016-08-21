@@ -68,4 +68,10 @@ public class Word {
     public void setProgress(double progress) {
         this.progress = progress;
     }
+
+    public void incrementProgress() {
+        if(progress<5) {
+            progress++;
+        }
+    }
 }

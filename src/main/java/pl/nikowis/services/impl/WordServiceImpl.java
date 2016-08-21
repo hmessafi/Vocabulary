@@ -18,25 +18,31 @@ import java.util.List;
 public class WordServiceImpl implements WordService {
 
     @Autowired
-    private WordRepository repository;
+    private WordRepository wordsRepository;
 
 
     @Override
     public Word save(Word word) {
         Preconditions.checkNotNull(word);
-        return repository.save(word);
+        return wordsRepository.save(word);
     }
 
     @Override
     public List<Word> findByUserId(Long userId) {
         Preconditions.checkNotNull(userId);
-        return repository.findByUserId(userId);
+        return wordsRepository.findByUserId(userId);
     }
 
     @Override
     public void delete(Word word) {
         Preconditions.checkNotNull(word);
         Preconditions.checkNotNull(word.getId());
-        repository.delete(word);
+        wordsRepository.delete(word);
+    }
+
+    @Override
+    public List<Word> findWorstWords(Long userId) {
+        Preconditions.checkNotNull(userId);
+        return wordsRepository.findTop10ByUserIdOrderByProgressAsc(userId);
     }
 }

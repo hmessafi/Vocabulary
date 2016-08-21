@@ -43,9 +43,9 @@ public class WordListView extends CustomComponent implements View {
     private SessionService sessionService;
 
 
-    private Grid wordsGrid;
+    private Grid wordGrid;
     private TextField original, translated;
-    private Button submitButton;
+    private Button submitButton, homeButotn;
     private FieldGroup fieldGroup;
     BeanItemContainer<Word> wordContainer;
 
@@ -64,7 +64,7 @@ public class WordListView extends CustomComponent implements View {
         wordsForm.setCaption("Add new word :");
         wordsForm.setSpacing(true);
 
-        VerticalLayout wordsFormAndGrid = new VerticalLayout(wordsForm, submitButton, wordsGrid);
+        VerticalLayout wordsFormAndGrid = new VerticalLayout(wordsForm, submitButton, wordGrid, homeButotn);
         wordsFormAndGrid.setSpacing(true);
         wordsFormAndGrid.setMargin(new MarginInfo(true, true, true, false));
         wordsFormAndGrid.setSizeUndefined();
@@ -81,6 +81,9 @@ public class WordListView extends CustomComponent implements View {
         user = sessionService.getUser();
         word.setUser(user);
 
+        homeButotn = new Button("Return home");
+        homeButotn.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
+
         original = new TextField("Original");
         original.addValidator(o -> checkNotEmpty((String) o));
         original.setNullRepresentation("");
@@ -93,19 +96,23 @@ public class WordListView extends CustomComponent implements View {
         BeanItem<Word> bean = new BeanItem<Word>(word);
         fieldGroup = new FieldGroup(bean);
         fieldGroup.bindMemberFields(this);
-        wordsGrid = new Grid("List of your words");
+        wordGrid = new Grid("List of your words");
         initializeGridContent();
-        wordsGrid.setWidthUndefined();
-        wordsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        wordGrid.setWidthUndefined();
+        wordGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         setupGridColumns();
     }
 
+    private void redirect(String viewName) {
+        getUI().getNavigator().navigateTo(viewName);
+    }
+
     private void setupGridColumns() {
-        wordsGrid.getColumn("id").setHidden(true);
-        wordsGrid.getColumn("user").setHidden(true);
-        wordsGrid.getColumn("user").setEditable(false);
-        wordsGrid.getColumn("delete").setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
-        wordsGrid.getColumn("progress").setRenderer(new ProgressBarRenderer(){
+        wordGrid.getColumn("id").setHidden(true);
+        wordGrid.getColumn("user").setHidden(true);
+        wordGrid.getColumn("user").setEditable(false);
+        wordGrid.getColumn("delete").setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
+        wordGrid.getColumn("progress").setRenderer(new ProgressBarRenderer(){
             @Override
             public JsonValue encode(Double value) {
                 if (value != null) {
@@ -114,7 +121,7 @@ public class WordListView extends CustomComponent implements View {
                 return super.encode(value);
             }
         });
-        wordsGrid.setColumnOrder("original", "translated", "progress", "delete");
+        wordGrid.setColumnOrder("original", "translated", "progress", "delete");
     }
 
     private void initializeGridContent() {
@@ -132,7 +139,7 @@ public class WordListView extends CustomComponent implements View {
                 return String.class;
             }
         });
-        wordsGrid.setContainerDataSource(gpc);
+        wordGrid.setContainerDataSource(gpc);
     }
 
     private void removeWord(Word word) {

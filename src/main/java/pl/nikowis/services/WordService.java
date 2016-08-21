@@ -29,4 +29,11 @@ public interface WordService {
      * @param word word to delete
      */
     void delete(Word word);
+
+    /**
+     * Finds the list of 10 words with least progress.
+     * @param userId words owner.
+     * @return list of words.
+     */
+    List<Word> findWorstWords(Long userId);
 }

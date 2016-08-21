@@ -74,3 +74,5 @@ $RECYCLE.BIN/
 hs_err_pid*
 .idea/artifacts/Vocabulary_app_war_exploded.xml
 .idea/artifacts/Vocabulary_app_war.xml
+src/main/webapp/VAADIN/themes/mytheme/asd.css
+src/main/webapp/VAADIN/themes/mytheme/styles.scss.cache

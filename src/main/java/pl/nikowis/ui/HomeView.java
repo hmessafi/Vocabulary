@@ -11,7 +11,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import pl.nikowis.entities.User;
 import pl.nikowis.services.SessionService;
 
@@ -22,12 +21,12 @@ import pl.nikowis.services.SessionService;
 @SpringView(name = HomeView.VIEW_NAME)
 public class HomeView extends CustomComponent implements View {
 
-    private SessionService sessionService;
-
     public static final String VIEW_NAME = "home";
 
+    private SessionService sessionService;
+
     private Label greeting;
-    private Button logout, wordList;
+    private Button logout, wordList, quiz;
 
     private User user;
 
@@ -39,7 +38,7 @@ public class HomeView extends CustomComponent implements View {
         initializeComponents();
 
         setSizeFull();
-        VerticalLayout fields = new VerticalLayout(greeting, logout, wordList);
+        VerticalLayout fields = new VerticalLayout(greeting, logout, wordList, quiz);
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -56,6 +55,9 @@ public class HomeView extends CustomComponent implements View {
         greeting = new Label();
         logout = new Button("Logout");
         logout.addClickListener(clickEvent -> eraseFromSessionAndRedirect());
+
+        quiz = new Button("Start the quiz");
+        quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
 
         wordList = new Button("Word list");
         wordList.addClickListener(clickEvent ->  redirect(WordListView.VIEW_NAME));

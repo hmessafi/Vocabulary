@@ -11,6 +11,7 @@ import pl.nikowis.exceptions.UndefinedViewException;
 import pl.nikowis.services.SessionService;
 import pl.nikowis.ui.HomeView;
 import pl.nikowis.ui.LoginView;
+import pl.nikowis.ui.QuizView;
 import pl.nikowis.ui.RegisterView;
 import pl.nikowis.ui.WordListView;
 
@@ -41,6 +42,7 @@ public class AccessChecker implements ViewInstanceAccessControl {
     private final List<String> authenticatedViews = Lists.newArrayList(
             HomeView.VIEW_NAME
             , WordListView.VIEW_NAME
+            , QuizView.VIEW_NAME
     );
 
     @Override
