@@ -32,4 +32,11 @@ public class WordServiceImpl implements WordService {
         Preconditions.checkNotNull(userId);
         return repository.findByUserId(userId);
     }
+
+    @Override
+    public void delete(Word word) {
+        Preconditions.checkNotNull(word);
+        Preconditions.checkNotNull(word.getId());
+        repository.delete(word);
+    }
 }

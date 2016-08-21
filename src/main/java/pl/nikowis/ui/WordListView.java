@@ -1,11 +1,13 @@
 package pl.nikowis.ui;
 
 import com.google.gwt.thirdparty.guava.common.base.Strings;
+import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.GeneratedPropertyContainer;
+import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.MarginInfo;
@@ -17,6 +19,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
@@ -42,9 +45,10 @@ public class WordListView extends CustomComponent implements View {
     private TextField original, translated;
     private Button submitButton;
     private FieldGroup fieldGroup;
+    BeanItemContainer<Word> wordContainer;
 
-    Word word;
-    User user;
+    private Word word;
+    private User user;
 
     @Autowired
     public WordListView(WordService wordService, SessionService sessionService) {
@@ -71,10 +75,10 @@ public class WordListView extends CustomComponent implements View {
     }
 
     private void initializeComponents() {
-
         word = new Word();
         user = sessionService.getUser();
         word.setUser(user);
+
         original = new TextField("Original");
         original.addValidator(o -> checkNotEmpty((String) o));
         original.setNullRepresentation("");
@@ -86,13 +90,39 @@ public class WordListView extends CustomComponent implements View {
 
         BeanItem<Word> bean = new BeanItem<Word>(word);
         fieldGroup = new FieldGroup(bean);
-        fieldGroup.addCommitHandler(new WordCommitHandler());
         fieldGroup.bindMemberFields(this);
         wordsGrid = new Grid("List of your words");
-        wordsGrid.setSelectionMode(Grid.SelectionMode.NONE);
-        populateGrid();
-        wordsGrid.removeColumn("id");
-        wordsGrid.removeColumn("user");
+        initializeGridContent();
+        wordsGrid.setWidthUndefined();
+        wordsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        wordsGrid.getColumn("id").setHidden(true);
+        wordsGrid.getColumn("user").setHidden(true);
+        wordsGrid.getColumn("user").setEditable(false);
+        wordsGrid.getColumn("delete").setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
+
+    }
+
+    private void initializeGridContent() {
+        wordContainer = new BeanItemContainer<Word>(Word.class);
+        wordContainer.addAll(wordService.findByUserId(user.getId()));
+        GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(wordContainer);
+        gpc.addGeneratedProperty("delete", new PropertyValueGenerator<String>() {
+            @Override
+            public String getValue(Item item, Object itemId, Object propertyId) {
+                return "Delete"; // The caption
+            }
+
+            @Override
+            public Class<String> getType() {
+                return String.class;
+            }
+        });
+        wordsGrid.setContainerDataSource(gpc);
+    }
+
+    private void removeWord(Word word) {
+        wordService.delete(word);
+        initializeGridContent();
     }
 
     private void checkNotEmpty(String o) {
@@ -105,33 +135,16 @@ public class WordListView extends CustomComponent implements View {
         try {
             fieldGroup.commit();
         } catch (FieldGroup.CommitException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return;
         }
+        Word savedWord = wordService.save(word);
+        word.setId(null);
+        initializeGridContent();
     }
-
-    private void populateGrid() {
-        BeanItemContainer<Word> wordContainer = new BeanItemContainer<Word>(Word.class);
-        wordContainer.addAll(wordService.findByUserId(user.getId()));
-        wordsGrid.setContainerDataSource(wordContainer);
-    }
-
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         //empty
-    }
-
-    private class WordCommitHandler implements FieldGroup.CommitHandler {
-        @Override
-        public void preCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
-            //empty
-        }
-
-        @Override
-        public void postCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
-            wordService.save(word);
-            word.setId(null);
-            populateGrid();
-        }
     }
 }

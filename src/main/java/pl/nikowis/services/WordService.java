@@ -23,4 +23,10 @@ public interface WordService {
      * @return list of words
      */
     List<Word> findByUserId(Long userId);
+
+    /**
+     * Deletes the word from the database.
+     * @param word word to delete
+     */
+    void delete(Word word);
 }
