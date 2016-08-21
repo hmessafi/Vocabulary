@@ -105,7 +105,7 @@ public class LoginView extends CustomComponent implements View {
         try {
             fieldGroup.commit();
         } catch (FieldGroup.CommitException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         if (isValid()) {

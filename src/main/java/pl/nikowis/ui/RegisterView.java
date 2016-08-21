@@ -99,7 +99,7 @@ public class RegisterView extends CustomComponent implements View {
             userService.createNewUser(user);
             getUI().getNavigator().navigateTo(LoginView.VIEW_NAME);
         } catch (FieldGroup.CommitException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

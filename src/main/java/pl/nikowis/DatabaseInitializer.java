@@ -3,10 +3,10 @@ package pl.nikowis;
 import com.vaadin.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.Role;
+import pl.nikowis.entities.User;
 import pl.nikowis.security.UserRoles;
 import pl.nikowis.services.RoleService;
 import pl.nikowis.services.UserService;
-import pl.nikowis.entities.User;
 
 import java.lang.reflect.Field;
 
@@ -45,7 +45,7 @@ public class DatabaseInitializer {
                 String role = (String)field.get(null);
                 roleService.save(new Role(role));
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
