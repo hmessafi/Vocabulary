@@ -1,5 +1,6 @@
 package pl.nikowis.ui;
 
+import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -21,7 +22,10 @@ import pl.nikowis.exceptions.UserHasNoWordsException;
 import pl.nikowis.services.SessionService;
 import pl.nikowis.services.WordService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Quiz view.
@@ -47,7 +51,7 @@ public class QuizView extends CustomComponent implements View {
     private int wordsDoneCounter;
     private int allWordsCount;
     private Word currentWord;
-    private boolean correctWords[];
+    private Queue<String> answers;
 
     @Autowired
     public QuizView(SessionService sessionService, WordService wordService) {
@@ -56,8 +60,7 @@ public class QuizView extends CustomComponent implements View {
         user = sessionService.getUser();
         wordList = wordService.findWorstWords(user.getId());
         allWordsCount = wordList.size();
-        correctWords = new boolean[allWordsCount];
-
+        answers = new LinkedBlockingDeque<>();
         if (allWordsCount == 0) {
             throw new UserHasNoWordsException();
         }
@@ -136,10 +139,10 @@ public class QuizView extends CustomComponent implements View {
     }
 
     private void commitAndCheckWord() {
+        answers.add(translated.getValue());
         if (translated.getValue().equals(currentWord.getTranslated())) {
             currentWord.incrementProgress();
             wordService.save(currentWord);
-            correctWords[wordsDoneCounter] = true;
         }
     }
 
@@ -175,6 +178,14 @@ public class QuizView extends CustomComponent implements View {
 
     private void createSummary() {
         wordGrid.setVisible(true);
+        int count=0;
+        wordGrid.setRowStyleGenerator(rowReference -> {
+            if(((Word)rowReference.getItemId()).getTranslated().equals(answers.poll())) {
+                return "highlight-green";
+            } else {
+                return "highlight-red";
+            }
+        });
     }
 
     private void redirect(String viewName) {
