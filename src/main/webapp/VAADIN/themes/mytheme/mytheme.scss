@@ -4,16 +4,21 @@
 @mixin mytheme {
   @include valo;
 
-  .v-button {
-    color:yellow;
+  .v-grid-row > td {
+    background:none;
+  }
+
+  .v-grid-cell {
+    background:none;
+  }
+  .v-grid-row > th {
+    background:none;
   }
 
   .highlight-red {
-    //background: red;
-    color:red;
+    background:red;
   }
   .highlight-green {
-    //background: green;
-    color:green;
+    background:green;
   }
 }
