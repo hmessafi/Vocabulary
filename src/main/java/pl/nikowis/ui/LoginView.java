@@ -47,6 +47,10 @@ public class LoginView extends CustomComponent implements View {
         this.userService = userService;
         this.sessionService = sessionService;
 
+        if(sessionService.getUser() != null) {
+            redirect(HomeView.VIEW_NAME);
+        }
+
         initalizeComponents();
 
         setSizeFull();

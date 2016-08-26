@@ -7,6 +7,7 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.nikowis.services.SessionService;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window
@@ -22,11 +23,19 @@ public class VocabularyUI extends UI {
     @Autowired
     private SpringViewProvider viewProvider;
 
+    @Autowired
+    private SessionService sessionService;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         this.setNavigator(new Navigator(this, this));
         getNavigator().addProvider(viewProvider);
 
-        getNavigator().navigateTo(LoginView.VIEW_NAME);
+        if(sessionService.getUser() != null) {
+            getNavigator().navigateTo(HomeView.VIEW_NAME);
+        } else {
+            getNavigator().navigateTo(LoginView.VIEW_NAME);
+        }
+
     }
 }
