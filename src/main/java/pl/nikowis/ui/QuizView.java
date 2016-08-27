@@ -1,6 +1,5 @@
 package pl.nikowis.ui;
 
-import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -16,16 +15,12 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.nikowis.entities.User;
+import pl.nikowis.entities.Quiz;
+import pl.nikowis.entities.QuizAnswer;
 import pl.nikowis.entities.Word;
 import pl.nikowis.exceptions.UserHasNoWordsException;
+import pl.nikowis.services.QuizService;
 import pl.nikowis.services.SessionService;
-import pl.nikowis.services.WordService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Quiz view.
@@ -39,33 +34,33 @@ public class QuizView extends CustomComponent implements View {
     public static final String VIEW_NAME = "quiz";
 
     private SessionService sessionService;
-    private WordService wordService;
+    private QuizService quizService;
 
     private TextField original, translated;
     private Button finish, quit, next;
     private Grid wordGrid;
     private ProgressBar progressBar;
 
-    private User user;
-    private List<Word> wordList;
-    private int wordsDoneCounter;
+    private int answersDoneCounter;
     private int allWordsCount;
-    private Word currentWord;
-    private Queue<String> answers;
+    private QuizAnswer currentAnswer;
+
+    private Quiz quiz;
 
     @Autowired
-    public QuizView(SessionService sessionService, WordService wordService) {
+    public QuizView(SessionService sessionService, QuizService quizService) {
         this.sessionService = sessionService;
-        this.wordService = wordService;
-        user = sessionService.getUser();
-        wordList = wordService.findWorstWords(user.getId());
-        allWordsCount = wordList.size();
-        answers = new LinkedBlockingDeque<>();
+        this.quizService = quizService;
+        answersDoneCounter = 0;
+
+        quiz = quizService.createQuiz();
+        allWordsCount = quiz.size();
+
         if (allWordsCount == 0) {
             throw new UserHasNoWordsException();
         }
 
-        currentWord = wordList.get(wordsDoneCounter);
+        currentAnswer = quiz.getAnswer(answersDoneCounter);
 
         initializeComponents();
 
@@ -97,7 +92,7 @@ public class QuizView extends CustomComponent implements View {
         original = new TextField();
         original.setCaption("Original");
         original.setEnabled(false);
-        original.setValue(currentWord.getOriginal());
+        original.setValue(currentAnswer.getWord().getOriginal());
         translated = new TextField();
         translated.setCaption("translated");
 
@@ -121,36 +116,41 @@ public class QuizView extends CustomComponent implements View {
     private void setupGrid() {
         wordGrid = new Grid("Quiz Summary");
         wordGrid.setVisible(false);
-        BeanItemContainer<Word> wordContainer = new BeanItemContainer<Word>(Word.class);
-        wordContainer.addAll(wordList);
+        wordGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        BeanItemContainer<QuizAnswer> wordContainer = new BeanItemContainer<QuizAnswer>(QuizAnswer.class);
+        wordContainer.addNestedContainerProperty("word.original");
+        wordContainer.addNestedContainerProperty("word.translated");
+        wordContainer.addAll(quiz.getAnswers());
         wordGrid.setContainerDataSource(wordContainer);
         wordGrid.getColumn("id").setHidden(true);
-        wordGrid.getColumn("user").setHidden(true);
-        wordGrid.getColumn("progress").setHidden(true);
+        wordGrid.getColumn("word").setHidden(true);
+        wordGrid.getColumn("correct").setHidden(true);
+        wordGrid.getColumn("userAnswer").setHeaderCaption("Your answer");
+        wordGrid.setColumnOrder("word.original", "word.translated", "userAnswer");
     }
 
     private void goToNext() {
         progressBar.setValue(progressBar.getValue() + 1.0f / allWordsCount);
         commitAndCheckWord();
         switchToNextWord();
-        if (wordsDoneCounter + 1 >= allWordsCount) {
+        if (answersDoneCounter + 1 >= allWordsCount) {
             changeToFinishButton();
         }
     }
 
     private void commitAndCheckWord() {
-        answers.add(translated.getValue());
-        if (translated.getValue().equals(currentWord.getTranslated())) {
-            currentWord.incrementProgress();
-            wordService.save(currentWord);
+        currentAnswer.setUserAnswer(translated.getValue());
+        if (translated.getValue().equals(currentAnswer.getWord().getTranslated())) {
+            currentAnswer.getWord().incrementProgress();
+            currentAnswer.setCorrect(true);
         }
     }
 
     private void switchToNextWord() {
         translated.setValue("");
-        wordsDoneCounter++;
-        currentWord = wordList.get(wordsDoneCounter);
-        original.setValue(currentWord.getOriginal());
+        answersDoneCounter++;
+        currentAnswer = quiz.getAnswer(answersDoneCounter);
+        original.setValue(currentAnswer.getWord().getOriginal());
     }
 
     private void changeToFinishButton() {
@@ -165,8 +165,9 @@ public class QuizView extends CustomComponent implements View {
     private void finishQuiz() {
         progressBar.setValue(1.0f);
         commitAndCheckWord();
+        quizService.save(quiz);
         hideQuizFields();
-        createSummary();
+        showSummary();
     }
 
     private void hideQuizFields() {
@@ -176,11 +177,11 @@ public class QuizView extends CustomComponent implements View {
         finish.setVisible(false);
     }
 
-    private void createSummary() {
+    private void showSummary() {
         wordGrid.setVisible(true);
-        int count=0;
+        int count = 0;
         wordGrid.setRowStyleGenerator(rowReference -> {
-            if(((Word)rowReference.getItemId()).getTranslated().equals(answers.poll())) {
+            if (((QuizAnswer) rowReference.getItemId()).isCorrect()) {
                 return "highlight-green";
             } else {
                 return "highlight-red";

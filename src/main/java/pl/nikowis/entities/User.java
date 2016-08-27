@@ -39,6 +39,9 @@ public class User {
     @OneToMany
     private List<Word> words;
 
+    @OneToMany
+    private List<Quiz> quizes;
+
     public User() {
 
     }
@@ -102,5 +105,13 @@ public class User {
 
     public void setWords(List<Word> words) {
         this.words = words;
+    }
+
+    public List<Quiz> getQuizes() {
+        return quizes;
+    }
+
+    public void setQuizes(List<Quiz> quizes) {
+        this.quizes = quizes;
     }
 }

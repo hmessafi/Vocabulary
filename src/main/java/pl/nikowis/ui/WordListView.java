@@ -45,7 +45,7 @@ public class WordListView extends CustomComponent implements View {
 
     private Grid wordGrid;
     private TextField original, translated;
-    private Button submitButton, homeButotn;
+    private Button submitButton, homeButton, quizButton;
     private FieldGroup fieldGroup;
     BeanItemContainer<Word> wordContainer;
 
@@ -64,7 +64,7 @@ public class WordListView extends CustomComponent implements View {
         wordsForm.setCaption("Add new word :");
         wordsForm.setSpacing(true);
 
-        VerticalLayout wordsFormAndGrid = new VerticalLayout(wordsForm, submitButton, wordGrid, homeButotn);
+        VerticalLayout wordsFormAndGrid = new VerticalLayout(wordsForm, submitButton, wordGrid, homeButton, quizButton);
         wordsFormAndGrid.setSpacing(true);
         wordsFormAndGrid.setMargin(new MarginInfo(true, true, true, false));
         wordsFormAndGrid.setSizeUndefined();
@@ -81,8 +81,11 @@ public class WordListView extends CustomComponent implements View {
         user = sessionService.getUser();
         word.setUser(user);
 
-        homeButotn = new Button("Return home");
-        homeButotn.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
+        homeButton = new Button("Return home");
+        homeButton.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
+
+        quizButton = new Button("Start quiz");
+        quizButton.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
 
         original = new TextField("Original");
         original.addValidator(o -> checkNotEmpty((String) o));
