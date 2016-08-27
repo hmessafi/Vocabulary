@@ -4,7 +4,6 @@ import com.google.gwt.thirdparty.guava.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.nikowis.entities.User;
-import pl.nikowis.repositories.RoleRepository;
 import pl.nikowis.repositories.UserRepository;
 import pl.nikowis.security.UserRoles;
 import pl.nikowis.services.RoleService;

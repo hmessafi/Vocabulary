@@ -1,7 +1,6 @@
 package pl.nikowis.ui;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;

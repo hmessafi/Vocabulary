@@ -3,6 +3,7 @@ package pl.nikowis.services;
 import pl.nikowis.entities.Role;
 
 /**
+ * Service for roles.
  * Created by nikowis on 2016-08-15.
  *
  * @author nikowis

@@ -46,22 +46,22 @@ public class AccessChecker implements ViewInstanceAccessControl {
     );
 
     @Override
-    public boolean isAccessGranted(UI ui, String s, View view) {
+    public boolean isAccessGranted(UI ui, String viewBeanName, View view) {
 
         User user = sessionService.getUser();
-        s = s.replaceFirst("View", "");
+        String viewName = viewBeanName.replaceFirst("View", "");
 
-        if (permitAllViews.contains(s)) {
+        if (permitAllViews.contains(viewName)) {
             return true;
         }
         if (user == null) {
             return false;
         }
-        if (authenticatedViews.contains(s)) {
+        if (authenticatedViews.contains(viewName)) {
             return true;
-        } else if (userViews.contains(s)) {
+        } else if (userViews.contains(viewName)) {
             return user.getRole().getName().equals(UserRoles.ROLE_USER);
-        } else if (adminViews.contains(s)) {
+        } else if (adminViews.contains(viewName)) {
             return user.getRole().getName().equals(UserRoles.ROLE_ADMIN);
         }
         throw new UndefinedViewException();

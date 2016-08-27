@@ -2,7 +2,6 @@ package pl.nikowis.entities;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

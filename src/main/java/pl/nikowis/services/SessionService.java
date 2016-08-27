@@ -3,6 +3,7 @@ package pl.nikowis.services;
 import pl.nikowis.entities.User;
 
 /**
+ * Service for saving and retreiving the user from the session.
  * Created by nikowis on 2016-08-05.
  */
 public interface SessionService {

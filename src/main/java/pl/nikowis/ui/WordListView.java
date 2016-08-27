@@ -30,6 +30,7 @@ import pl.nikowis.services.SessionService;
 import pl.nikowis.services.WordService;
 
 /**
+ * View for adding and browsing words.
  * Created by nikowis on 2016-08-20.
  *
  * @author nikowis
@@ -163,7 +164,7 @@ public class WordListView extends CustomComponent implements View {
             System.out.println(e.getMessage());
             return;
         }
-        Word savedWord = wordService.save(word);
+        wordService.save(word);
         word.setId(null);
         initializeGridContent();
     }

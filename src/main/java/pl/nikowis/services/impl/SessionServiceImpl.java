@@ -4,8 +4,6 @@ package pl.nikowis.services.impl;
 import com.google.gwt.thirdparty.guava.common.base.Preconditions;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.WrappedSession;
-import com.vaadin.ui.CustomComponent;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import pl.nikowis.entities.User;
 import pl.nikowis.services.SessionService;

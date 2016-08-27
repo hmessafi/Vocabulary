@@ -8,9 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by nikowis on 2016-07-27.

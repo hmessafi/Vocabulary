@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Word {
 
+    public static final int MAX_PROGRESS = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -70,7 +72,7 @@ public class Word {
     }
 
     public void incrementProgress() {
-        if(progress<5) {
+        if(progress<MAX_PROGRESS) {
             progress++;
         }
     }

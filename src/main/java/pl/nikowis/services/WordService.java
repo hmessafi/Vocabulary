@@ -5,6 +5,7 @@ import pl.nikowis.entities.Word;
 import java.util.List;
 
 /**
+ * Service for words.
  * Created by nikowis on 2016-08-18.
  *
  * @author nikowis

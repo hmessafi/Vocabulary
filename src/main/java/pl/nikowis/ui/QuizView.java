@@ -17,10 +17,8 @@ import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.Quiz;
 import pl.nikowis.entities.QuizAnswer;
-import pl.nikowis.entities.Word;
 import pl.nikowis.exceptions.UserHasNoWordsException;
 import pl.nikowis.services.QuizService;
-import pl.nikowis.services.SessionService;
 
 /**
  * Quiz view.
@@ -33,7 +31,6 @@ public class QuizView extends CustomComponent implements View {
 
     public static final String VIEW_NAME = "quiz";
 
-    private SessionService sessionService;
     private QuizService quizService;
 
     private TextField original, translated;
@@ -48,8 +45,7 @@ public class QuizView extends CustomComponent implements View {
     private Quiz quiz;
 
     @Autowired
-    public QuizView(SessionService sessionService, QuizService quizService) {
-        this.sessionService = sessionService;
+    public QuizView(QuizService quizService) {
         this.quizService = quizService;
         answersDoneCounter = 0;
 
