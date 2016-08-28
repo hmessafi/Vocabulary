@@ -46,7 +46,7 @@ public class LoginView extends CustomComponent implements View {
         this.userService = userService;
         this.sessionService = sessionService;
 
-        if(sessionService.getUser() != null) {
+        if (sessionService.getUser() != null) {
             redirect(HomeView.VIEW_NAME);
         }
 
@@ -89,7 +89,7 @@ public class LoginView extends CustomComponent implements View {
 
         registerButton = new Button("Register");
         registerButton.setCaption("Register new user");
-        registerButton.addClickListener(clickEvent ->  redirect(RegisterView.VIEW_NAME));
+        registerButton.addClickListener(clickEvent -> redirect(RegisterView.VIEW_NAME));
 
         user = new User();
 
@@ -111,20 +111,13 @@ public class LoginView extends CustomComponent implements View {
             System.out.println(e.getMessage());
         }
 
-        if (isValid()) {
-            sessionService.setUser(user);
-            redirect(HomeView.VIEW_NAME);
-        } else {
-            password.setValue(null);
-            password.focus();
-        }
+        authenticateUser();
+        sessionService.setUser(user);
+        redirect(HomeView.VIEW_NAME);
     }
 
-    private boolean isValid() {
+    private boolean authenticateUser() {
         User dbUser = userService.authenticateUser(user);
-        if (dbUser == null) {
-            return false;
-        }
         user = dbUser;
         return true;
     }

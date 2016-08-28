@@ -12,6 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
+import pl.nikowis.security.UserRoles;
 import pl.nikowis.services.SessionService;
 
 /**
@@ -26,7 +27,7 @@ public class HomeView extends CustomComponent implements View {
     private SessionService sessionService;
 
     private Label greeting;
-    private Button logout, wordList, quiz;
+    private Button logout, wordList, quiz, userList;
 
     private User user;
 
@@ -38,7 +39,7 @@ public class HomeView extends CustomComponent implements View {
         initializeComponents();
 
         setSizeFull();
-        VerticalLayout fields = new VerticalLayout(greeting, logout, wordList, quiz);
+        VerticalLayout fields = new VerticalLayout(greeting, logout, wordList, quiz, userList);
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -66,6 +67,10 @@ public class HomeView extends CustomComponent implements View {
         if(user!=null) {
             greeting.setValue("Hello " + user.getUsername());
         }
+
+        userList = new Button("User list");
+        userList.addClickListener(clickEvent -> redirect(UserListView.VIEW_NAME));
+        userList.setVisible(sessionService.hasRole(UserRoles.ROLE_ADMIN));
     }
 
     private void redirect(String viewName) {

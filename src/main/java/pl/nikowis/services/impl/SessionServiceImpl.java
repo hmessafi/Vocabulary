@@ -6,6 +6,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.WrappedSession;
 import org.springframework.stereotype.Service;
 import pl.nikowis.entities.User;
+import pl.nikowis.security.UserRoles;
 import pl.nikowis.services.SessionService;
 
 /**
@@ -35,4 +36,12 @@ public class SessionServiceImpl implements SessionService {
         session.setAttribute(USER_SESSION_ATTR_NAME, null);
         return user;
     }
+
+    @Override
+    public boolean hasRole(String roleName) {
+        User user = getUser();
+        return user.getRole().getName().equals(roleName);
+    }
+
+
 }

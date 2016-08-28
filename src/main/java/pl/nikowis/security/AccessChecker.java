@@ -13,6 +13,7 @@ import pl.nikowis.ui.HomeView;
 import pl.nikowis.ui.LoginView;
 import pl.nikowis.ui.QuizView;
 import pl.nikowis.ui.RegisterView;
+import pl.nikowis.ui.UserListView;
 import pl.nikowis.ui.WordListView;
 
 import java.util.List;
@@ -37,7 +38,9 @@ public class AccessChecker implements ViewInstanceAccessControl {
 
     private final List<String> userViews = Lists.newArrayList();
 
-    private final List<String> adminViews = Lists.newArrayList();
+    private final List<String> adminViews = Lists.newArrayList(
+            UserListView.VIEW_NAME
+    );
 
     private final List<String> authenticatedViews = Lists.newArrayList(
             HomeView.VIEW_NAME

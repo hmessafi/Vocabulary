@@ -2,6 +2,9 @@ package pl.nikowis.services;
 
 import pl.nikowis.entities.User;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Service for users.
  * Created by nikowis on 2016-08-11.
@@ -37,4 +40,16 @@ public interface UserService {
      * @return saved admin
      */
     User createNewAdmin(User user);
+
+    /**
+     * Gets all users sorted by username.
+     * @return user list
+     */
+    List<User> getAll();
+
+    /**
+     * Sets the user stuatus to disabled, and changes his password.
+     * @param user user to delete
+     */
+    void deleteUser(User user);
 }

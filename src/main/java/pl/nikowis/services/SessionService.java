@@ -24,4 +24,12 @@ public interface SessionService {
      * @return user from the session parameter or null.
      */
     User eraseUser();
+
+    /**
+     * Checks if the user in the session has the specified role.
+     * Use UserRoles class for getting role names.
+     * @param roleName name of the role
+     * @return result
+     */
+    boolean hasRole(String roleName);
 }

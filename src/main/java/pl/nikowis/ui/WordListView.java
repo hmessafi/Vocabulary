@@ -48,7 +48,6 @@ public class WordListView extends CustomComponent implements View {
     private TextField original, translated;
     private Button submitButton, homeButton, quizButton;
     private FieldGroup fieldGroup;
-    BeanItemContainer<Word> wordContainer;
 
     private Word word;
     private User user;
@@ -100,10 +99,11 @@ public class WordListView extends CustomComponent implements View {
         BeanItem<Word> bean = new BeanItem<Word>(word);
         fieldGroup = new FieldGroup(bean);
         fieldGroup.bindMemberFields(this);
+
         wordGrid = new Grid("List of your words");
         initializeGridContent();
         wordGrid.setWidthUndefined();
-        wordGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        wordGrid.setSelectionMode(Grid.SelectionMode.NONE);
         setupGridColumns();
     }
 
@@ -129,7 +129,7 @@ public class WordListView extends CustomComponent implements View {
     }
 
     private void initializeGridContent() {
-        wordContainer = new BeanItemContainer<Word>(Word.class);
+        BeanItemContainer<Word> wordContainer = new BeanItemContainer<Word>(Word.class);
         wordContainer.addAll(wordService.findByUserId(user.getId()));
         GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(wordContainer);
         gpc.addGeneratedProperty("delete", new PropertyValueGenerator<String>() {
