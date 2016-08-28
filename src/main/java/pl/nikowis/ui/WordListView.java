@@ -88,9 +88,11 @@ public class WordListView extends CustomComponent implements View {
         quizButton.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
 
         original = new TextField("Original");
+        original.setValidationVisible(false);
         original.addValidator(o -> checkNotEmpty((String) o));
         original.setNullRepresentation("");
         translated = new TextField("Translated");
+        translated.setValidationVisible(false);
         translated.addValidator(o -> checkNotEmpty((String) o));
         translated.setNullRepresentation("");
         submitButton = new Button("Add word");
@@ -158,6 +160,8 @@ public class WordListView extends CustomComponent implements View {
     }
 
     private void commitFieldGroup() {
+        original.setValidationVisible(true);
+        translated.setValidationVisible(true);
         try {
             fieldGroup.commit();
         } catch (FieldGroup.CommitException e) {
@@ -167,6 +171,8 @@ public class WordListView extends CustomComponent implements View {
         wordService.save(word);
         word.setId(null);
         initializeGridContent();
+        original.setValidationVisible(false);
+        translated.setValidationVisible(false);
     }
 
     @Override
