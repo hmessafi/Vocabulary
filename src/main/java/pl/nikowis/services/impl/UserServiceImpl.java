@@ -1,8 +1,11 @@
 package pl.nikowis.services.impl;
 
 import com.google.gwt.thirdparty.guava.common.base.Preconditions;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.nikowis.entities.User;
 import pl.nikowis.exceptions.NoSuchUsernameUserException;
@@ -24,11 +27,19 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final int DELETED_PASSWORD_LENGTH =5;
+
     @Autowired
     private UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private RoleService roleService;
+
+    public UserServiceImpl() {
+        passwordEncoder = new BCryptPasswordEncoder();
+    }
 
     @Override
     public User saveUser(User user) {
@@ -46,7 +57,7 @@ public class UserServiceImpl implements UserService {
         if(!dbUser.isEnabled()) {
             throw new UserIsDeletedException();
         }
-        if(!dbUser.getPassword().equals(dbUser.getPassword())) {
+        if(!passwordEncoder.matches(user.getPassword(),dbUser.getPassword())) {
             throw new WrongPasswordException();
         }
         return dbUser;
@@ -58,6 +69,7 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findOneByUsername(user.getUsername()) != null) {
             throw new UsernameAlreadyInUse();
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
         user.setRole(roleService.findOneByName(UserRoles.ROLE_USER));
         return userRepository.save(user);
@@ -66,6 +78,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createNewAdmin(User user) {
         Preconditions.checkNotNull(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
         user.setRole(roleService.findOneByName(UserRoles.ROLE_ADMIN));
         return userRepository.save(user);
@@ -84,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void changePassword(User user) {
-        //TODO: hashing users password;
+        user.setPassword(passwordEncoder.encode(RandomStringUtils.random(DELETED_PASSWORD_LENGTH)));
     }
 
 }

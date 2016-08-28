@@ -2,6 +2,8 @@ package pl.nikowis;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.nikowis.entities.Role;
 import pl.nikowis.entities.User;
 import pl.nikowis.security.UserRoles;
@@ -25,6 +27,12 @@ public class DatabaseInitializer {
     @Autowired
     private UserService userService;
 
+    private PasswordEncoder passwordEncoder;
+
+    public DatabaseInitializer() {
+        passwordEncoder = new BCryptPasswordEncoder();
+    }
+
     public void populate() {
         createRoles();
         createUsers();
@@ -33,8 +41,8 @@ public class DatabaseInitializer {
     private void createUsers() {
         User user = new User("user", "1");
         User admin = new User("admin", "1");
-        userService.createNewUser(user);
         userService.createNewAdmin(admin);
+        userService.createNewUser(user);
     }
 
     private void createRoles() {
