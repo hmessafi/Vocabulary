@@ -26,6 +26,7 @@ import elemental.json.JsonValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.entities.Word;
+import pl.nikowis.services.I18n;
 import pl.nikowis.services.SessionService;
 import pl.nikowis.services.WordService;
 
@@ -42,29 +43,30 @@ public class WordListView extends CustomComponent implements View {
 
     private WordService wordService;
     private SessionService sessionService;
+    private I18n i18n;
 
-
-    private Grid wordGrid;
+    private Grid words;
     private TextField original, translated;
-    private Button submitButton, homeButton, quizButton;
+    private Button submit, home, quiz;
     private FieldGroup fieldGroup;
 
     private Word word;
     private User user;
 
     @Autowired
-    public WordListView(WordService wordService, SessionService sessionService) {
+    public WordListView(WordService wordService, SessionService sessionService, I18n i18n) {
         this.wordService = wordService;
         this.sessionService = sessionService;
+        this.i18n = i18n;
 
         initializeComponents();
 
         setSizeFull();
-        HorizontalLayout wordsForm = new HorizontalLayout(original, translated);
-        wordsForm.setCaption("Add new word :");
-        wordsForm.setSpacing(true);
+        HorizontalLayout addWordForm = new HorizontalLayout(original, translated);
+        addWordForm.setCaption(i18n.getMessage("wordListView.addWordForm.title", getLocale()));
+        addWordForm.setSpacing(true);
 
-        VerticalLayout wordsFormAndGrid = new VerticalLayout(wordsForm, submitButton, wordGrid, homeButton, quizButton);
+        VerticalLayout wordsFormAndGrid = new VerticalLayout(addWordForm, submit, words, home, quiz);
         wordsFormAndGrid.setSpacing(true);
         wordsFormAndGrid.setMargin(new MarginInfo(true, true, true, false));
         wordsFormAndGrid.setSizeUndefined();
@@ -81,31 +83,31 @@ public class WordListView extends CustomComponent implements View {
         user = sessionService.getUser();
         word.setUser(user);
 
-        homeButton = new Button("Return home");
-        homeButton.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
+        home = new Button(i18n.getMessage("wordListView.home", getLocale()));
+        home.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
 
-        quizButton = new Button("Start quiz");
-        quizButton.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
+        quiz = new Button(i18n.getMessage("wordListView.quiz", getLocale()));
+        quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
 
-        original = new TextField("Original");
+        original = new TextField(i18n.getMessage("wordListView.original", getLocale()));
         original.setValidationVisible(false);
         original.addValidator(o -> checkNotEmpty((String) o));
         original.setNullRepresentation("");
-        translated = new TextField("Translated");
+        translated = new TextField(i18n.getMessage("wordListView.translated", getLocale()));
         translated.setValidationVisible(false);
         translated.addValidator(o -> checkNotEmpty((String) o));
         translated.setNullRepresentation("");
-        submitButton = new Button("Add word");
-        submitButton.addClickListener(clickEvent -> commitFieldGroup());
+        submit = new Button(i18n.getMessage("wordListView.submit", getLocale()));
+        submit.addClickListener(clickEvent -> commitFieldGroup());
 
         BeanItem<Word> bean = new BeanItem<Word>(word);
         fieldGroup = new FieldGroup(bean);
         fieldGroup.bindMemberFields(this);
 
-        wordGrid = new Grid("List of your words");
+        words = new Grid(i18n.getMessage("wordListView.words.title", getLocale()));
         initializeGridContent();
-        wordGrid.setWidthUndefined();
-        wordGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        words.setWidthUndefined();
+        words.setSelectionMode(Grid.SelectionMode.NONE);
         setupGridColumns();
     }
 
@@ -114,11 +116,11 @@ public class WordListView extends CustomComponent implements View {
     }
 
     private void setupGridColumns() {
-        wordGrid.getColumn("id").setHidden(true);
-        wordGrid.getColumn("user").setHidden(true);
-        wordGrid.getColumn("user").setEditable(false);
-        wordGrid.getColumn("delete").setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
-        wordGrid.getColumn("progress").setRenderer(new ProgressBarRenderer(){
+        words.getColumn("id").setHidden(true);
+        words.getColumn("user").setHidden(true);
+        words.getColumn("user").setEditable(false);
+        words.getColumn("delete").setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
+        words.getColumn("progress").setRenderer(new ProgressBarRenderer(){
             @Override
             public JsonValue encode(Double value) {
                 if (value != null) {
@@ -127,7 +129,7 @@ public class WordListView extends CustomComponent implements View {
                 return super.encode(value);
             }
         });
-        wordGrid.setColumnOrder("original", "translated", "progress", "delete");
+        words.setColumnOrder("original", "translated", "progress", "delete");
     }
 
     private void initializeGridContent() {
@@ -137,7 +139,7 @@ public class WordListView extends CustomComponent implements View {
         gpc.addGeneratedProperty("delete", new PropertyValueGenerator<String>() {
             @Override
             public String getValue(Item item, Object itemId, Object propertyId) {
-                return "Delete"; // The caption
+                return i18n.getMessage("wordListView.words.delete", getLocale()); // The caption
             }
 
             @Override
@@ -145,7 +147,7 @@ public class WordListView extends CustomComponent implements View {
                 return String.class;
             }
         });
-        wordGrid.setContainerDataSource(gpc);
+        words.setContainerDataSource(gpc);
     }
 
     private void removeWord(Word word) {

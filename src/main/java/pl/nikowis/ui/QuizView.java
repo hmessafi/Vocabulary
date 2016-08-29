@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.Quiz;
 import pl.nikowis.entities.QuizAnswer;
 import pl.nikowis.exceptions.UserHasNoWordsException;
+import pl.nikowis.services.I18n;
 import pl.nikowis.services.QuizService;
 
 /**
@@ -33,6 +34,8 @@ public class QuizView extends CustomComponent implements View {
 
     private QuizService quizService;
 
+    private I18n i18n;
+
     private TextField original, translated;
     private Button finish, quit, next;
     private Grid wordGrid;
@@ -45,8 +48,10 @@ public class QuizView extends CustomComponent implements View {
     private Quiz quiz;
 
     @Autowired
-    public QuizView(QuizService quizService) {
+    public QuizView(QuizService quizService, I18n i18n) {
         this.quizService = quizService;
+        this.i18n = i18n;
+
         answersDoneCounter = 0;
 
         quiz = quizService.createQuiz();
@@ -80,24 +85,24 @@ public class QuizView extends CustomComponent implements View {
 
     private void initializeComponents() {
         progressBar = new ProgressBar();
-        progressBar.setCaption("Quiz progress");
+        progressBar.setCaption(i18n.getMessage("quizView.progressBar", getLocale()));
         progressBar.setValue(0.0f);
         progressBar.setWidthUndefined();
         setupGrid();
 
         original = new TextField();
-        original.setCaption("Original");
+        original.setCaption(i18n.getMessage("quizView.original", getLocale()));
         original.setEnabled(false);
         original.setValue(currentAnswer.getWord().getOriginal());
         translated = new TextField();
-        translated.setCaption("translated");
+        translated.setCaption(i18n.getMessage("quizView.translated", getLocale()));
 
-        finish = new Button("Finish quiz.");
+        finish = new Button(i18n.getMessage("quizView.finish", getLocale()));
         finish.addClickListener(clickEvent -> finishQuiz());
 
-        quit = new Button("Quit quiz");
+        quit = new Button(i18n.getMessage("quizView.quit", getLocale()));
         quit.addClickListener(clickEvent -> quitQuiz());
-        next = new Button("Go to next word");
+        next = new Button(i18n.getMessage("quizView.next", getLocale()));
         next.addClickListener(clickEvent -> goToNext());
 
         if (allWordsCount < 2) {
@@ -110,7 +115,7 @@ public class QuizView extends CustomComponent implements View {
     }
 
     private void setupGrid() {
-        wordGrid = new Grid("Quiz Summary");
+        wordGrid = new Grid(i18n.getMessage("quizView.wordGrid.title", getLocale()));
         wordGrid.setVisible(false);
         wordGrid.setSelectionMode(Grid.SelectionMode.NONE);
         BeanItemContainer<QuizAnswer> wordContainer = new BeanItemContainer<QuizAnswer>(QuizAnswer.class);

@@ -15,6 +15,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
+import pl.nikowis.services.I18n;
 import pl.nikowis.services.SessionService;
 import pl.nikowis.services.UserService;
 
@@ -31,20 +32,23 @@ public class LoginView extends CustomComponent implements View {
 
     private UserService userService;
 
+    private I18n i18n;
+
     private TextField username;
 
     private PasswordField password;
 
-    private Button loginButton, registerButton;
+    private Button login, register;
 
     private FieldGroup fieldGroup;
 
     private User user;
 
     @Autowired
-    public LoginView(UserService userService, SessionService sessionService) {
+    public LoginView(UserService userService, SessionService sessionService, I18n i18n) {
         this.userService = userService;
         this.sessionService = sessionService;
+        this.i18n = i18n;
 
         if (sessionService.getUser() != null) {
             redirect(HomeView.VIEW_NAME);
@@ -57,11 +61,11 @@ public class LoginView extends CustomComponent implements View {
         VerticalLayout fields = new VerticalLayout(
                 username
                 , password
-                , loginButton
-                , registerButton
+                , login
+                , register
         );
 
-        fields.setCaption("Login to access the application.");
+        fields.setCaption(i18n.getMessage("loginView.title", getLocale()));
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -74,22 +78,21 @@ public class LoginView extends CustomComponent implements View {
     }
 
     private void initalizeComponents() {
-        username = new TextField("User:");
+        username = new TextField(i18n.getMessage("loginView.username", getLocale()));
         username.setWidth("300px");
         username.setRequired(true);
 
-        password = new PasswordField("Password:");
+        password = new PasswordField(i18n.getMessage("loginView.password", getLocale()));
         password.setWidth("300px");
         password.setRequired(true);
         password.setValue("");
         password.setNullRepresentation("");
 
-        loginButton = new Button("Login");
-        loginButton.addClickListener(clickEvent -> commitAndAuthenticateUser());
+        login = new Button(i18n.getMessage("loginView.login", getLocale()));
+        login.addClickListener(clickEvent -> commitAndAuthenticateUser());
 
-        registerButton = new Button("Register");
-        registerButton.setCaption("Register new user");
-        registerButton.addClickListener(clickEvent -> redirect(RegisterView.VIEW_NAME));
+        register = new Button(i18n.getMessage("loginView.register", getLocale()));
+        register.addClickListener(clickEvent -> redirect(RegisterView.VIEW_NAME));
 
         user = new User();
 

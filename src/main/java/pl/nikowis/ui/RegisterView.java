@@ -17,6 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
+import pl.nikowis.services.I18n;
 import pl.nikowis.services.UserService;
 
 /**
@@ -32,18 +33,21 @@ public class RegisterView extends CustomComponent implements View {
 
     private UserService userService;
 
+    private I18n i18n;
+
     private TextField username;
 
     private PasswordField password;
 
     private PasswordField repeatPassword;
-    private Button submitButton;
+    private Button submit;
     private FieldGroup fieldGroup;
     private User user;
 
     @Autowired
-    public RegisterView(UserService userService) {
+    public RegisterView(UserService userService, I18n i18n) {
         this.userService = userService;
+        this.i18n = i18n;
 
         intializeComponents();
 
@@ -53,10 +57,10 @@ public class RegisterView extends CustomComponent implements View {
                 username
                 , password
                 , repeatPassword
-                , submitButton
+                , submit
         );
 
-        fields.setCaption("Create new account.");
+        fields.setCaption(i18n.getMessage("registerView.title", getLocale()));
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -69,14 +73,14 @@ public class RegisterView extends CustomComponent implements View {
     }
 
     private void intializeComponents() {
-        username = new TextField("Username");
+        username = new TextField(i18n.getMessage("registerView.username", getLocale()));
         username.setNullRepresentation("");
-        password = new PasswordField("Password");
+        password = new PasswordField(i18n.getMessage("registerView.password", getLocale()));
         password.setNullRepresentation("");
-        repeatPassword = new PasswordField("Repeat password");
+        repeatPassword = new PasswordField(i18n.getMessage("registerView.passwordRepeat", getLocale()));
         repeatPassword.addValidator(o -> validatePasswordMatch(o));
-        submitButton = new Button("Create new account");
-        submitButton.addClickListener(clickEvent -> submitAndRedirect());
+        submit = new Button(i18n.getMessage("registerView.submit", getLocale()));
+        submit.addClickListener(clickEvent -> submitAndRedirect());
         user = new User();
 
         BeanItem<User> bean = new BeanItem<User>(user);

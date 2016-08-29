@@ -13,6 +13,7 @@ import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.security.UserRoles;
+import pl.nikowis.services.I18n;
 import pl.nikowis.services.SessionService;
 
 /**
@@ -26,16 +27,17 @@ public class HomeView extends CustomComponent implements View {
 
     private SessionService sessionService;
 
+    private I18n i18n;
+
     private Label greeting;
     private Button logout, wordList, quiz, userList;
 
     private User user;
 
     @Autowired
-    public HomeView(SessionService sessionService) {
-
+    public HomeView(SessionService sessionService, I18n i18n) {
+        this.i18n = i18n;
         this.sessionService = sessionService;
-
         initializeComponents();
 
         setSizeFull();
@@ -54,21 +56,25 @@ public class HomeView extends CustomComponent implements View {
 
     private void initializeComponents() {
         greeting = new Label();
-        logout = new Button("Logout");
+        logout = new Button(i18n.getMessage("homeView.logout", getLocale()));
         logout.addClickListener(clickEvent -> eraseFromSessionAndRedirect());
 
-        quiz = new Button("Start the quiz");
+        quiz = new Button(i18n.getMessage("homeView.quiz", getLocale()));
         quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
 
-        wordList = new Button("Word list");
-        wordList.addClickListener(clickEvent ->  redirect(WordListView.VIEW_NAME));
+        wordList = new Button(i18n.getMessage("homeView.wordList", getLocale()));
+        wordList.addClickListener(clickEvent -> redirect(WordListView.VIEW_NAME));
 
         user = sessionService.getUser();
-        if(user!=null) {
-            greeting.setValue("Hello " + user.getUsername());
+        if (user != null) {
+            greeting.setValue(i18n.getMessage(
+                    "homeView.greeting"
+                    , new Object[]{user.getUsername()}
+                    , getLocale())
+            );
         }
 
-        userList = new Button("User list");
+        userList = new Button(i18n.getMessage("homeView.userList", getLocale()));
         userList.addClickListener(clickEvent -> redirect(UserListView.VIEW_NAME));
         userList.setVisible(sessionService.hasRole(UserRoles.ROLE_ADMIN));
     }
