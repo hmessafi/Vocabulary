@@ -8,10 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.nikowis.entities.User;
-import pl.nikowis.exceptions.NoSuchUsernameUserException;
-import pl.nikowis.exceptions.base.UserIsDeletedException;
-import pl.nikowis.exceptions.base.UsernameAlreadyInUse;
-import pl.nikowis.exceptions.base.WrongPasswordException;
+import pl.nikowis.exceptions.NoSuchUsernameException;
+import pl.nikowis.exceptions.UserIsDeletedException;
+import pl.nikowis.exceptions.UsernameAlreadyInUse;
+import pl.nikowis.exceptions.WrongPasswordException;
 import pl.nikowis.repositories.UserRepository;
 import pl.nikowis.security.UserRoles;
 import pl.nikowis.services.RoleService;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         Preconditions.checkNotNull(user);
         User dbUser = userRepository.findOneByUsername(user.getUsername());
         if(dbUser == null) {
-            throw new NoSuchUsernameUserException();
+            throw new NoSuchUsernameException();
         }
         if(!dbUser.isEnabled()) {
             throw new UserIsDeletedException();

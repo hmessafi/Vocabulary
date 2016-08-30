@@ -1,4 +1,6 @@
-package pl.nikowis.exceptions.base;
+package pl.nikowis.exceptions;
+
+import pl.nikowis.exceptions.base.BusinessException;
 
 /**
  * Occurs when user tries to log in with wrong password.
