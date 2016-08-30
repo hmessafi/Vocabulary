@@ -26,6 +26,7 @@ import elemental.json.JsonValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.entities.Word;
+import pl.nikowis.exceptions.EmptyFieldException;
 import pl.nikowis.services.I18n;
 import pl.nikowis.services.SessionService;
 import pl.nikowis.services.WordService;
@@ -157,7 +158,7 @@ public class WordListView extends CustomComponent implements View {
 
     private void checkNotEmpty(String o) {
         if (Strings.isNullOrEmpty(o)) {
-            throw new Validator.InvalidValueException("Field must not be empty");
+            throw new EmptyFieldException();
         }
     }
 
