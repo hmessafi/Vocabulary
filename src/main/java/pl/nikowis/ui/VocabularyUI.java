@@ -7,10 +7,16 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
+import javafx.scene.layout.Pane;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.exceptions.base.BusinessException;
 import pl.nikowis.exceptions.base.TechnicalException;
@@ -37,20 +43,37 @@ public class VocabularyUI extends UI {
     @Autowired
     private I18n i18n;
 
-    final VerticalLayout layout = new VerticalLayout();
+    @Autowired
+    private Header header;
+
+    @Autowired
+    private Footer footer;
+
+    final private Panel mainPanel = new Panel();
+    final private VerticalLayout mainLayout = new VerticalLayout();
+    final private VerticalLayout viewLayout = new VerticalLayout();
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        this.setNavigator(new Navigator(this, this));
+        setSizeFull();
+        mainLayout.setSizeFull();
+        mainLayout.setSpacing(true);
+        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        mainLayout.addComponents(header, viewLayout, footer);
+        mainLayout.setComponentAlignment(footer, Alignment.BOTTOM_CENTER);
+        mainLayout.setComponentAlignment(header, Alignment.TOP_CENTER);
+        mainLayout.setComponentAlignment(viewLayout, Alignment.MIDDLE_CENTER);
+        Navigator navigator = new Navigator(this, viewLayout);
+        this.setNavigator(navigator);
         getNavigator().addProvider(viewProvider);
-
+        mainPanel.setContent(mainLayout);
         if (sessionService.getUser() != null) {
             getNavigator().navigateTo(HomeView.VIEW_NAME);
         } else {
             getNavigator().navigateTo(LoginView.VIEW_NAME);
         }
+        setContent(mainPanel);
 
-        layout.addComponent(new Label("Adssadasd"));
         VaadinSession.getCurrent().setErrorHandler(new ErrorHandler() {
 
             @Override
@@ -79,23 +102,5 @@ public class VocabularyUI extends UI {
             }
 
         });
-//        UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
-//            @Override
-//            public void error(com.vaadin.server.ErrorEvent event) {
-//                // Find the final cause
-//                String cause = "<b>The click failed because:</b><br/>";
-//                for (Throwable t = event.getThrowable(); t != null;
-//                     t = t.getCause())
-//                    if (t.getCause() == null) // We're at final cause
-//                        cause += t.getClass().getName() + "<br/>";
-//
-//                // Display the error message in a custom fashion
-//                layout.addComponent(new Label(cause, ContentMode.HTML));
-//
-//                // Do the default error handling (optional)
-//                doDefault(event);
-//            }
-//        });
-
     }
 }
