@@ -7,12 +7,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 /**
  * Word entity.
  * Created by nikowis on 2016-07-27.
  */
 @Entity
-public class Word {
+public class Word extends BaseEntity{
 
     public static final int MAX_PROGRESS = 5;
 

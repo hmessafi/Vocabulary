@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 /**
  * Quiz database representation.
  * Created by nikowis on 2016-08-26.
@@ -18,7 +20,7 @@ import java.util.List;
  * @author nikowis
  */
 @Entity
-public class Quiz {
+public class Quiz extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 /**
  * Entity for roles.
  * Created by nikowis on 2016-08-14.
@@ -12,7 +14,7 @@ import javax.persistence.Id;
  * @author nikowis
  */
 @Entity
-public class Role {
+public class Role extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

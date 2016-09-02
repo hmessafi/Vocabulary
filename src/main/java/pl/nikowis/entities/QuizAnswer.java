@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 /**
  * Single answer in quiz database representation.
  * Created by nikowis on 2016-08-26.
@@ -13,7 +15,7 @@ import javax.persistence.ManyToOne;
  * @author nikowis
  */
 @Entity
-public class QuizAnswer {
+public class QuizAnswer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

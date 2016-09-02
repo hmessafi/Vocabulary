@@ -10,11 +10,13 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 /**
  * Created by nikowis on 2016-07-27.
  */
 @Entity
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
