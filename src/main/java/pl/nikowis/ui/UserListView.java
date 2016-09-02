@@ -10,15 +10,14 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
-import pl.nikowis.services.I18n;
 import pl.nikowis.services.UserService;
+import pl.nikowis.ui.base.I18nCustomComponent;
 
 /**
  * Admin view for browsing and deleting users.
@@ -27,22 +26,20 @@ import pl.nikowis.services.UserService;
  * @author nikowis
  */
 @SpringView(name = UserListView.VIEW_NAME)
-public class UserListView extends CustomComponent implements View {
+public class UserListView extends I18nCustomComponent implements View {
 
     public static final String VIEW_NAME = "userList";
 
+    @Autowired
     private UserService userService;
-
-    private I18n i18n;
 
     private Grid users;
     private Button home;
     private BeanItemContainer<User> userContainer;
 
-    @Autowired
-    public UserListView(UserService userService, I18n i18n) {
-        this.userService = userService;
-        this.i18n = i18n;
+
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         initializeComponents();
 
         setSizeFull();
@@ -60,10 +57,10 @@ public class UserListView extends CustomComponent implements View {
     }
 
     private void initializeComponents() {
-        home = new Button(i18n.getMessage("userListView.home", getLocale()));
+        home = new Button(getMessage("userListView.home"));
         home.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
 
-        users = new Grid(i18n.getMessage("userListView.users.title", getLocale()));
+        users = new Grid(getMessage("userListView.users.title"));
         users.setWidthUndefined();
         users.setSelectionMode(Grid.SelectionMode.NONE);
         initializeGridContent();
@@ -77,7 +74,7 @@ public class UserListView extends CustomComponent implements View {
         gpc.addGeneratedProperty("delete", new PropertyValueGenerator<String>() {
             @Override
             public String getValue(Item item, Object itemId, Object propertyId) {
-                return i18n.getMessage("userListView.users.delete", getLocale());
+                return getMessage("userListView.users.delete");
             }
 
             @Override
@@ -86,7 +83,7 @@ public class UserListView extends CustomComponent implements View {
             }
         });
         users.setContainerDataSource(gpc);
-        users.setColumns("username", "enabled", "score", "role.name", "delete");
+        users.setColumns("username", "enabled", "role.name", "delete");
         users.getColumn("delete").setRenderer(new ButtonRenderer(event -> deleteUser(((User)event.getItemId()))));
     }
 
@@ -100,8 +97,4 @@ public class UserListView extends CustomComponent implements View {
     }
 
 
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        //empty
-    }
 }

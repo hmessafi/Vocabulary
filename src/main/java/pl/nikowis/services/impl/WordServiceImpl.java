@@ -45,4 +45,17 @@ public class WordServiceImpl implements WordService {
         Preconditions.checkNotNull(userId);
         return wordsRepository.findTop10ByUserIdOrderByProgressAsc(userId);
     }
+
+    @Override
+    public long count(Long userId) {
+        Preconditions.checkNotNull(userId);
+        return wordsRepository.countByUserId(userId);
+    }
+
+    @Override
+    public Long getTotalScore(Long userId) {
+        Preconditions.checkNotNull(userId);
+        Long res = wordsRepository.countTotalScore(userId);
+        return res==null?new Long(0):res;
+    }
 }

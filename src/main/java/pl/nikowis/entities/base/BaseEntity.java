@@ -10,7 +10,7 @@ import javax.persistence.Version;
 
 /**
  * Base entity. Manages creation and update date as well as versioning of entities.
- * Created by nwisniewski on 02.09.2016
+ * Created by nikowis on 02.09.2016
  *
  * @author nikowis
  */

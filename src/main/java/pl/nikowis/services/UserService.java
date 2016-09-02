@@ -1,8 +1,8 @@
 package pl.nikowis.services;
 
 import pl.nikowis.entities.User;
+import pl.nikowis.exceptions.WrongPasswordException;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ public interface UserService {
      * @param user user to save
      * @return saved user.
      */
-    User saveUser(User user);
+    User saveUserWithNewPassword(User user);
 
     /**
      * Checks if this user matches a user from the database.
@@ -52,4 +52,11 @@ public interface UserService {
      * @param user user to delete
      */
     void deleteUser(User user);
+
+    /**
+     * Checks if the user and the password match.
+     * @param user user to check
+     * @param password password to check
+     */
+    void authenticatePassword(User user, String password) throws WrongPasswordException;
 }

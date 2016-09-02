@@ -42,8 +42,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
+    public User saveUserWithNewPassword(User user) {
         Preconditions.checkNotNull(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -92,11 +93,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(User user) {
         user.setEnabled(false);
-        changePassword(user);
+        changePasswordToRandom(user);
         userRepository.save(user);
     }
 
-    private void changePassword(User user) {
+    @Override
+    public void authenticatePassword(User user, String password) throws WrongPasswordException {
+        Preconditions.checkNotNull(user);
+        Preconditions.checkNotNull(password);
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new WrongPasswordException();
+        }
+    }
+
+    private void changePasswordToRandom(User user) {
         user.setPassword(passwordEncoder.encode(RandomStringUtils.random(DELETED_PASSWORD_LENGTH)));
     }
 

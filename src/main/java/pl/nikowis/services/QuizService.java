@@ -21,4 +21,11 @@ public interface QuizService {
      */
     Quiz save(Quiz quiz);
 
+    /**
+     * Counts user quizes.
+     * @param userId user
+     * @return number of quizes
+     */
+    long count(Long userId);
+
 }

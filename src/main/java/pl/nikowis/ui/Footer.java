@@ -3,16 +3,12 @@ package pl.nikowis.ui;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.nikowis.exceptions.base.BusinessException;
-import pl.nikowis.services.I18n;
+
+import pl.nikowis.ui.base.I18nCustomComponent;
+import pl.nikowis.ui.base.InitializableComponent;
 
 /**
  * Footer component for all the views.
@@ -21,16 +17,14 @@ import pl.nikowis.services.I18n;
  * @author nikowis
  */
 @SpringComponent
-public class Footer extends CustomComponent {
-
-    private I18n i18n;
+public class Footer extends I18nCustomComponent implements InitializableComponent{
 
     final private VerticalLayout mainLayout = new VerticalLayout();
     final private HorizontalLayout components = new HorizontalLayout();
-    @Autowired
-    public Footer(I18n i18n) {
-        this.i18n = i18n;
-        Label label = new Label(i18n.getMessage("footer.title", getLocale()));
+
+    @Override
+    public void initializeComponent() {
+        Label label = new Label(getMessage("footer.title"));
         components.addComponent(label);
         components.setSpacing(true);
         components.setMargin(new MarginInfo(true, true, true, false));
@@ -42,5 +36,4 @@ public class Footer extends CustomComponent {
         mainLayout.setStyleName("myFooter");
         setCompositionRoot(mainLayout);
     }
-
 }

@@ -12,8 +12,9 @@ import pl.nikowis.services.SessionService;
 import pl.nikowis.ui.HomeView;
 import pl.nikowis.ui.LoginView;
 import pl.nikowis.ui.QuizView;
-import pl.nikowis.ui.RegisterView;
+import pl.nikowis.ui.RegistrationView;
 import pl.nikowis.ui.UserListView;
+import pl.nikowis.ui.UserProfileView;
 import pl.nikowis.ui.WordListView;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class AccessChecker implements ViewInstanceAccessControl {
 
     private final List<String> permitAllViews = Lists.newArrayList(
             LoginView.VIEW_NAME
-            , RegisterView.VIEW_NAME
+            , RegistrationView.VIEW_NAME
     );
 
     private final List<String> userViews = Lists.newArrayList();
@@ -46,6 +47,7 @@ public class AccessChecker implements ViewInstanceAccessControl {
             HomeView.VIEW_NAME
             , WordListView.VIEW_NAME
             , QuizView.VIEW_NAME
+            , UserProfileView.VIEW_NAME
     );
 
     @Override

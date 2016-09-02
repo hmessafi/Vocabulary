@@ -1,5 +1,6 @@
 package pl.nikowis.services.impl;
 
+import com.google.gwt.thirdparty.guava.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.nikowis.entities.Quiz;
@@ -49,6 +50,13 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public Quiz save(Quiz quiz) {
+        Preconditions.checkNotNull(quiz);
         return quizRepository.save(quiz);
+    }
+
+    @Override
+    public long count(Long userId) {
+        Preconditions.checkNotNull(userId);
+        return quizRepository.count();
     }
 }

@@ -32,8 +32,6 @@ public class User extends BaseEntity {
     @OneToOne
     private Role role;
 
-    private int score;
-
     private boolean enabled;
 
     @OneToMany
@@ -81,14 +79,6 @@ public class User extends BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     public Role getRole() {

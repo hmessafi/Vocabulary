@@ -1,8 +1,6 @@
 package pl.nikowis.ui;
 
-import com.google.gwt.thirdparty.guava.common.base.Preconditions;
 import com.google.gwt.thirdparty.guava.common.base.Strings;
-import com.vaadin.data.Validator;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
@@ -11,7 +9,6 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -20,23 +17,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.exceptions.EmptyFieldException;
 import pl.nikowis.exceptions.PasswordsDontMatchException;
-import pl.nikowis.services.I18n;
 import pl.nikowis.services.UserService;
+import pl.nikowis.ui.base.I18nCustomComponent;
 
 /**
- * Register page.
+ * Registration page.
  * Created by nikowis on 2016-08-11.
  *
  * @author nikowis
  */
 @SpringView
-public class RegisterView extends CustomComponent implements View {
+public class RegistrationView extends I18nCustomComponent implements View {
 
     public static final String VIEW_NAME = "register";
 
+    @Autowired
     private UserService userService;
-
-    private I18n i18n;
 
     private TextField username;
 
@@ -47,11 +43,8 @@ public class RegisterView extends CustomComponent implements View {
     private FieldGroup fieldGroup;
     private User user;
 
-    @Autowired
-    public RegisterView(UserService userService, I18n i18n) {
-        this.userService = userService;
-        this.i18n = i18n;
-
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         intializeComponents();
 
         setSizeFull();
@@ -63,7 +56,7 @@ public class RegisterView extends CustomComponent implements View {
                 , submit
         );
 
-        fields.setCaption(i18n.getMessage("registerView.title", getLocale()));
+        fields.setCaption(getMessage("registerView.title"));
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -76,15 +69,15 @@ public class RegisterView extends CustomComponent implements View {
     }
 
     private void intializeComponents() {
-        username = new TextField(i18n.getMessage("registerView.username", getLocale()));
+        username = new TextField(getMessage("registerView.username"));
         username.setNullRepresentation("");
         username.setRequired(true);
-        password = new PasswordField(i18n.getMessage("registerView.password", getLocale()));
+        password = new PasswordField(getMessage("registerView.password"));
         password.setNullRepresentation("");
         password.setRequired(true);
-        repeatPassword = new PasswordField(i18n.getMessage("registerView.passwordRepeat", getLocale()));
+        repeatPassword = new PasswordField(getMessage("registerView.passwordRepeat"));
         repeatPassword.setRequired(true);
-        submit = new Button(i18n.getMessage("registerView.submit", getLocale()));
+        submit = new Button(getMessage("registerView.submit"));
         submit.addClickListener(clickEvent -> submitAndRedirect());
         user = new User();
 
@@ -100,13 +93,12 @@ public class RegisterView extends CustomComponent implements View {
         }
     }
 
-    private boolean validatePasswordMatch() {
+    private void validatePasswordMatch() {
         checkNotEmpty(password.getValue());
         checkNotEmpty(repeatPassword.getValue());
         if (!password.getValue().equals(repeatPassword.getValue())) {
             throw new PasswordsDontMatchException();
         }
-        return false;
     }
 
     private void submitAndRedirect() {
@@ -120,8 +112,5 @@ public class RegisterView extends CustomComponent implements View {
         }
     }
 
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        //empty
-    }
+
 }

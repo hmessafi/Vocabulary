@@ -2,7 +2,6 @@ package pl.nikowis.ui;
 
 import com.google.gwt.thirdparty.guava.common.base.Strings;
 import com.vaadin.data.Item;
-import com.vaadin.data.Validator;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -14,7 +13,6 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -22,14 +20,16 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ProgressBarRenderer;
 import com.vaadin.ui.themes.Reindeer;
-import elemental.json.JsonValue;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import elemental.json.JsonValue;
 import pl.nikowis.entities.User;
 import pl.nikowis.entities.Word;
 import pl.nikowis.exceptions.EmptyFieldException;
-import pl.nikowis.services.I18n;
 import pl.nikowis.services.SessionService;
 import pl.nikowis.services.WordService;
+import pl.nikowis.ui.base.I18nCustomComponent;
 
 /**
  * View for adding and browsing words.
@@ -38,13 +38,14 @@ import pl.nikowis.services.WordService;
  * @author nikowis
  */
 @SpringView(name = WordListView.VIEW_NAME)
-public class WordListView extends CustomComponent implements View {
+public class WordListView extends I18nCustomComponent implements View {
 
     public static final String VIEW_NAME = "wordList";
 
+    @Autowired
     private WordService wordService;
+    @Autowired
     private SessionService sessionService;
-    private I18n i18n;
 
     private Grid words;
     private TextField original, translated;
@@ -54,17 +55,13 @@ public class WordListView extends CustomComponent implements View {
     private Word word;
     private User user;
 
-    @Autowired
-    public WordListView(WordService wordService, SessionService sessionService, I18n i18n) {
-        this.wordService = wordService;
-        this.sessionService = sessionService;
-        this.i18n = i18n;
-
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         initializeComponents();
 
         setSizeFull();
         HorizontalLayout addWordForm = new HorizontalLayout(original, translated);
-        addWordForm.setCaption(i18n.getMessage("wordListView.addWordForm.title", getLocale()));
+        addWordForm.setCaption(getMessage("wordListView.addWordForm.title"));
         addWordForm.setSpacing(true);
 
         VerticalLayout wordsFormAndGrid = new VerticalLayout(addWordForm, submit, words, home, quiz);
@@ -84,28 +81,28 @@ public class WordListView extends CustomComponent implements View {
         user = sessionService.getUser();
         word.setUser(user);
 
-        home = new Button(i18n.getMessage("wordListView.home", getLocale()));
+        home = new Button(getMessage("wordListView.home"));
         home.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
 
-        quiz = new Button(i18n.getMessage("wordListView.quiz", getLocale()));
+        quiz = new Button(getMessage("wordListView.quiz"));
         quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
 
-        original = new TextField(i18n.getMessage("wordListView.original", getLocale()));
+        original = new TextField(getMessage("wordListView.original"));
         original.setValidationVisible(false);
         original.addValidator(o -> checkNotEmpty((String) o));
         original.setNullRepresentation("");
-        translated = new TextField(i18n.getMessage("wordListView.translated", getLocale()));
+        translated = new TextField(getMessage("wordListView.translated"));
         translated.setValidationVisible(false);
         translated.addValidator(o -> checkNotEmpty((String) o));
         translated.setNullRepresentation("");
-        submit = new Button(i18n.getMessage("wordListView.submit", getLocale()));
+        submit = new Button(getMessage("wordListView.submit"));
         submit.addClickListener(clickEvent -> commitFieldGroup());
 
         BeanItem<Word> bean = new BeanItem<Word>(word);
         fieldGroup = new FieldGroup(bean);
         fieldGroup.bindMemberFields(this);
 
-        words = new Grid(i18n.getMessage("wordListView.words.title", getLocale()));
+        words = new Grid(getMessage("wordListView.words.title"));
         initializeGridContent();
         words.setWidthUndefined();
         words.setSelectionMode(Grid.SelectionMode.NONE);
@@ -121,7 +118,7 @@ public class WordListView extends CustomComponent implements View {
         words.getColumn("user").setHidden(true);
         words.getColumn("user").setEditable(false);
         words.getColumn("delete").setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
-        words.getColumn("progress").setRenderer(new ProgressBarRenderer(){
+        words.getColumn("progress").setRenderer(new ProgressBarRenderer() {
             @Override
             public JsonValue encode(Double value) {
                 if (value != null) {
@@ -140,7 +137,7 @@ public class WordListView extends CustomComponent implements View {
         gpc.addGeneratedProperty("delete", new PropertyValueGenerator<String>() {
             @Override
             public String getValue(Item item, Object itemId, Object propertyId) {
-                return i18n.getMessage("wordListView.words.delete", getLocale()); // The caption
+                return getMessage("wordListView.words.delete"); // The caption
             }
 
             @Override
@@ -176,10 +173,5 @@ public class WordListView extends CustomComponent implements View {
         initializeGridContent();
         original.setValidationVisible(false);
         translated.setValidationVisible(false);
-    }
-
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        //empty
     }
 }

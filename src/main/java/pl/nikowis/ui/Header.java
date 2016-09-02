@@ -3,14 +3,15 @@ package pl.nikowis.ui;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.nikowis.services.I18n;
+
+import pl.nikowis.services.SessionService;
+import pl.nikowis.ui.base.I18nCustomComponent;
+import pl.nikowis.ui.base.InitializableComponent;
 
 /**
  * Header component for all the views.
@@ -19,17 +20,20 @@ import pl.nikowis.services.I18n;
  * @author nikowis
  */
 @SpringComponent
-public class Header extends CustomComponent {
+public class Header extends I18nCustomComponent implements InitializableComponent{
 
-    private I18n i18n;
+    @Autowired
+    private SessionService sessionService;
 
     final private VerticalLayout mainLayout = new VerticalLayout();
     final private HorizontalLayout components = new HorizontalLayout();
-    @Autowired
-    public Header(I18n i18n) {
-        this.i18n = i18n;
-        Label label = new Label(i18n.getMessage("header.title", getLocale()));
-        components.addComponent(label);
+    private Label title;
+
+    @Override
+    public void initializeComponent() {
+        title = new Label(getMessage("header.title"));
+
+        components.addComponent(title);
         components.setSpacing(true);
         components.setMargin(new MarginInfo(true, true, true, false));
         components.setSizeUndefined();

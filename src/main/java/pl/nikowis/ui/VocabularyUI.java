@@ -55,8 +55,9 @@ public class VocabularyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        setSizeFull();
-        mainLayout.setSizeFull();
+        footer.initializeComponent();
+        header.initializeComponent();
+        mainPanel.setSizeFull();
         mainLayout.setSpacing(true);
         mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
         mainLayout.addComponents(header, viewLayout, footer);
