@@ -25,17 +25,14 @@ public class Header extends I18nCustomComponent implements InitializableComponen
     @Autowired
     private SessionService sessionService;
 
-    final private VerticalLayout mainLayout = new VerticalLayout();
-    final private HorizontalLayout components = new HorizontalLayout();
-    private Label title;
-
     @Override
     public void initializeComponent() {
-        title = new Label(getMessage("header.title"));
+        VerticalLayout mainLayout = new VerticalLayout();
+        HorizontalLayout components = new HorizontalLayout();
+        Label title = new Label(getMessage("header.title"));
 
         components.addComponent(title);
         components.setSpacing(true);
-        components.setMargin(new MarginInfo(true, true, true, false));
         components.setSizeUndefined();
 
         mainLayout.addComponent(components);

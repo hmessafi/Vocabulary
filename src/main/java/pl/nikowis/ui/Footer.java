@@ -19,15 +19,13 @@ import pl.nikowis.ui.base.InitializableComponent;
 @SpringComponent
 public class Footer extends I18nCustomComponent implements InitializableComponent{
 
-    final private VerticalLayout mainLayout = new VerticalLayout();
-    final private HorizontalLayout components = new HorizontalLayout();
-
     @Override
     public void initializeComponent() {
+        VerticalLayout mainLayout = new VerticalLayout();
+        HorizontalLayout components = new HorizontalLayout();
         Label label = new Label(getMessage("footer.title"));
         components.addComponent(label);
         components.setSpacing(true);
-        components.setMargin(new MarginInfo(true, true, true, false));
         components.setSizeUndefined();
 
         mainLayout.addComponent(components);

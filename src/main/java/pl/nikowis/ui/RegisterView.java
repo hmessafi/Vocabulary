@@ -27,7 +27,7 @@ import pl.nikowis.ui.base.I18nCustomComponent;
  * @author nikowis
  */
 @SpringView
-public class RegistrationView extends I18nCustomComponent implements View {
+public class RegisterView extends I18nCustomComponent implements View {
 
     public static final String VIEW_NAME = "register";
 

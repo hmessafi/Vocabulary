@@ -89,7 +89,7 @@ public class LoginView extends I18nCustomComponent implements View {
         login.addClickListener(clickEvent -> commitAndAuthenticateUser());
 
         register = new Button(getMessage("loginView.register"));
-        register.addClickListener(clickEvent -> redirect(RegistrationView.VIEW_NAME));
+        register.addClickListener(clickEvent -> redirect(RegisterView.VIEW_NAME));
 
         user = new User();
 

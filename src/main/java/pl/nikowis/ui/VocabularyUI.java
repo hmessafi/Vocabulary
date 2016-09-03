@@ -34,6 +34,9 @@ import pl.nikowis.services.SessionService;
 @SpringUI
 public class VocabularyUI extends UI {
 
+    public static final int FOOTER_HEIGHT = 60;
+    public static final int HEADER_HEIGHT = 60;
+
     @Autowired
     private SpringViewProvider viewProvider;
 
