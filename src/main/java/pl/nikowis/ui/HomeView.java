@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.security.UserRoles;
 import pl.nikowis.services.SessionService;
+import pl.nikowis.services.WordService;
 import pl.nikowis.ui.base.I18nCustomComponent;
 
 /**
@@ -26,6 +27,9 @@ public class HomeView extends I18nCustomComponent implements View {
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private WordService wordService;
 
     private Label greeting;
     private Button logout, wordList, quiz, userList, userProfile;
@@ -56,6 +60,8 @@ public class HomeView extends I18nCustomComponent implements View {
 
         quiz = new Button(getMessage("homeView.quiz"));
         quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
+        boolean userHasAnyWords = wordService.count(sessionService.getUser().getId()) > 0 ;
+        quiz.setVisible(userHasAnyWords);
 
         wordList = new Button(getMessage("homeView.wordList"));
         wordList.addClickListener(clickEvent -> redirect(WordListView.VIEW_NAME));

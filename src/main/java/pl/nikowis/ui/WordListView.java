@@ -53,7 +53,7 @@ public class WordListView extends I18nCustomComponent implements View {
 
     private Grid words;
     private TextField original, translated;
-    private Button submit, home, quiz;
+    private Button submit, home;
     private FieldGroup fieldGroup;
 
     private Word word;
@@ -68,7 +68,7 @@ public class WordListView extends I18nCustomComponent implements View {
         addWordForm.setCaption(getMessage("wordListView.addWordForm.title"));
         addWordForm.setSpacing(true);
 
-        VerticalLayout wordsFormAndGrid = new VerticalLayout(addWordForm, submit, words, home, quiz);
+        VerticalLayout wordsFormAndGrid = new VerticalLayout(addWordForm, submit, words, home);
         wordsFormAndGrid.setSpacing(true);
         wordsFormAndGrid.setMargin(new MarginInfo(true, true, true, false));
         wordsFormAndGrid.setSizeUndefined();
@@ -87,9 +87,6 @@ public class WordListView extends I18nCustomComponent implements View {
 
         home = new Button(getMessage("wordListView.home"));
         home.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
-
-        quiz = new Button(getMessage("wordListView.quiz"));
-        quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
 
         original = new TextField(getMessage("wordListView.original"));
         original.setValidationVisible(false);
@@ -178,6 +175,8 @@ public class WordListView extends I18nCustomComponent implements View {
         word.setId(null);
         initializeGridContent();
         original.setValidationVisible(false);
+        original.setValue("");
         translated.setValidationVisible(false);
+        translated.setValue("");
     }
 }
