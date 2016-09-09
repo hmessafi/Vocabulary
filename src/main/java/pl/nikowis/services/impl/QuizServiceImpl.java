@@ -7,6 +7,7 @@ import pl.nikowis.entities.Quiz;
 import pl.nikowis.entities.QuizAnswer;
 import pl.nikowis.entities.Word;
 import pl.nikowis.repositories.QuizRepository;
+import pl.nikowis.repositories.WordRepository;
 import pl.nikowis.services.QuizService;
 import pl.nikowis.services.SessionService;
 import pl.nikowis.services.WordService;
@@ -26,10 +27,10 @@ public class QuizServiceImpl implements QuizService {
     private QuizRepository quizRepository;
 
     @Autowired
-    private SessionService sessionService;
+    private WordRepository wordRepository;
 
     @Autowired
-    private WordService wordService;
+    private SessionService sessionService;
 
     @Override
     public Quiz createQuiz() {
@@ -41,7 +42,7 @@ public class QuizServiceImpl implements QuizService {
 
     private List<QuizAnswer> createQuizAnswers() {
         List<QuizAnswer> answers = new ArrayList<>();
-        List<Word> words = wordService.findWorstWords(sessionService.getUser().getId());
+        List<Word> words = wordRepository.findTop10ByUserIdOrderByProgressAsc(sessionService.getUser().getId());
         for(Word w : words) {
             answers.add(new QuizAnswer(w));
         }
@@ -51,6 +52,9 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public Quiz save(Quiz quiz) {
         Preconditions.checkNotNull(quiz);
+        for(QuizAnswer answer : quiz.getAnswers()) {
+            wordRepository.save(answer.getWord());
+        }
         return quizRepository.save(quiz);
     }
 
