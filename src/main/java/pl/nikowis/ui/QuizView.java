@@ -30,6 +30,12 @@ import pl.nikowis.ui.base.I18nCustomComponent;
 public class QuizView extends I18nCustomComponent implements View {
 
     public static final String VIEW_NAME = "quiz";
+    private static final String SUCCESS_STYLE ="highlight-green";
+    private static final String FAILURE_STYLE ="highlight-red";
+    private final String COL_ORIGINAL = "word.original";
+    private final String COL_TRANSLATED = "word.translated";
+    private final String COL_USER_ANSWER = "userAnswer";
+
 
     @Autowired
     private QuizService quizService;
@@ -114,15 +120,16 @@ public class QuizView extends I18nCustomComponent implements View {
         wordGrid.setVisible(false);
         wordGrid.setSelectionMode(Grid.SelectionMode.NONE);
         BeanItemContainer<QuizAnswer> wordContainer = new BeanItemContainer<QuizAnswer>(QuizAnswer.class);
-        wordContainer.addNestedContainerProperty("word.original");
-        wordContainer.addNestedContainerProperty("word.translated");
+        wordContainer.addNestedContainerProperty(COL_ORIGINAL);
+        wordContainer.addNestedContainerProperty(COL_TRANSLATED);
         wordContainer.addAll(quiz.getAnswers());
         wordGrid.setContainerDataSource(wordContainer);
-        wordGrid.getColumn("id").setHidden(true);
-        wordGrid.getColumn("word").setHidden(true);
-        wordGrid.getColumn("correct").setHidden(true);
-        wordGrid.getColumn("userAnswer").setHeaderCaption("Your answer");
-        wordGrid.setColumnOrder("word.original", "word.translated", "userAnswer");
+        wordGrid.getColumn(COL_USER_ANSWER).setHeaderCaption(getMessage("quizView.wordGrid.userAnswerCol"));
+        wordGrid.setColumns(
+                COL_ORIGINAL
+                , COL_TRANSLATED
+                , COL_USER_ANSWER
+        );
     }
 
     private void goToNext() {
@@ -178,9 +185,9 @@ public class QuizView extends I18nCustomComponent implements View {
         int count = 0;
         wordGrid.setRowStyleGenerator(rowReference -> {
             if (((QuizAnswer) rowReference.getItemId()).isCorrect()) {
-                return "highlight-green";
+                return SUCCESS_STYLE;
             } else {
-                return "highlight-red";
+                return FAILURE_STYLE;
             }
         });
     }
@@ -188,6 +195,5 @@ public class QuizView extends I18nCustomComponent implements View {
     private void redirect(String viewName) {
         getUI().getNavigator().navigateTo(viewName);
     }
-
 
 }

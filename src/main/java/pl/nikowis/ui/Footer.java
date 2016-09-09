@@ -19,6 +19,8 @@ import pl.nikowis.ui.base.InitializableComponent;
 @SpringComponent
 public class Footer extends I18nCustomComponent implements InitializableComponent{
 
+    private static final String FOOTER_STYLE = "myFooter";
+
     @Override
     public void initializeComponent() {
         VerticalLayout mainLayout = new VerticalLayout();
@@ -31,7 +33,7 @@ public class Footer extends I18nCustomComponent implements InitializableComponen
         mainLayout.addComponent(components);
         mainLayout.setSizeFull();
         mainLayout.setComponentAlignment(components, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName("myFooter");
+        mainLayout.setStyleName(FOOTER_STYLE);
         setCompositionRoot(mainLayout);
     }
 }

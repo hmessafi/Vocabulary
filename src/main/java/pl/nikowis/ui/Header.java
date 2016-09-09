@@ -22,6 +22,8 @@ import pl.nikowis.ui.base.InitializableComponent;
 @SpringComponent
 public class Header extends I18nCustomComponent implements InitializableComponent{
 
+    private static final String HEADER_STYLE = "myHeader";
+
     @Autowired
     private SessionService sessionService;
 
@@ -38,7 +40,7 @@ public class Header extends I18nCustomComponent implements InitializableComponen
         mainLayout.addComponent(components);
         mainLayout.setSizeFull();
         mainLayout.setComponentAlignment(components, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName("myHeader");
+        mainLayout.setStyleName(HEADER_STYLE);
         setCompositionRoot(mainLayout);
     }
 }

@@ -29,6 +29,10 @@ import pl.nikowis.ui.base.I18nCustomComponent;
 public class UserListView extends I18nCustomComponent implements View {
 
     public static final String VIEW_NAME = "userList";
+    private final String COL_USERNAME = "username";
+    private final String COL_ENABLED = "enabled";
+    private final String COL_ROLE = "role.name";
+    private final String COL_DELETE = "delete";
 
     @Autowired
     private UserService userService;
@@ -69,9 +73,9 @@ public class UserListView extends I18nCustomComponent implements View {
     private void initializeGridContent() {
         BeanItemContainer<User> userContainer = new BeanItemContainer<User>(User.class);
         userContainer.addAll(userService.getAll());
-        userContainer.addNestedContainerProperty("role.name");
+        userContainer.addNestedContainerProperty(COL_ROLE);
         GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(userContainer);
-        gpc.addGeneratedProperty("delete", new PropertyValueGenerator<String>() {
+        gpc.addGeneratedProperty(COL_DELETE, new PropertyValueGenerator<String>() {
             @Override
             public String getValue(Item item, Object itemId, Object propertyId) {
                 return getMessage("userListView.users.delete");
@@ -83,8 +87,8 @@ public class UserListView extends I18nCustomComponent implements View {
             }
         });
         users.setContainerDataSource(gpc);
-        users.setColumns("username", "enabled", "role.name", "delete");
-        users.getColumn("delete").setRenderer(new ButtonRenderer(event -> deleteUser(((User)event.getItemId()))));
+        users.setColumns(COL_USERNAME, COL_ENABLED, COL_ROLE, COL_DELETE);
+        users.getColumn(COL_DELETE).setRenderer(new ButtonRenderer(event -> deleteUser(((User)event.getItemId()))));
     }
 
     private void deleteUser(User user) {

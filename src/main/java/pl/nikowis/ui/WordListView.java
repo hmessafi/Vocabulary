@@ -41,6 +41,10 @@ import pl.nikowis.ui.base.I18nCustomComponent;
 public class WordListView extends I18nCustomComponent implements View {
 
     public static final String VIEW_NAME = "wordList";
+    private final String COL_ORIGINAL = "original";
+    private final String COL_TRANSLATED = "translated";
+    private final String COL_PROGRESS = "progress";
+    private final String COL_DELETE = "delete";
 
     @Autowired
     private WordService wordService;
@@ -114,11 +118,8 @@ public class WordListView extends I18nCustomComponent implements View {
     }
 
     private void setupGridColumns() {
-        words.getColumn("id").setHidden(true);
-        words.getColumn("user").setHidden(true);
-        words.getColumn("user").setEditable(false);
-        words.getColumn("delete").setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
-        words.getColumn("progress").setRenderer(new ProgressBarRenderer() {
+        words.getColumn(COL_DELETE).setRenderer(new ButtonRenderer(event -> removeWord((Word) event.getItemId())));
+        words.getColumn(COL_PROGRESS).setRenderer(new ProgressBarRenderer() {
             @Override
             public JsonValue encode(Double value) {
                 if (value != null) {
@@ -127,14 +128,19 @@ public class WordListView extends I18nCustomComponent implements View {
                 return super.encode(value);
             }
         });
-        words.setColumnOrder("original", "translated", "progress", "delete");
+        words.setColumns(
+                COL_ORIGINAL
+                , COL_TRANSLATED
+                , COL_PROGRESS
+                , COL_DELETE
+        );
     }
 
     private void initializeGridContent() {
         BeanItemContainer<Word> wordContainer = new BeanItemContainer<Word>(Word.class);
         wordContainer.addAll(wordService.findByUserId(user.getId()));
         GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(wordContainer);
-        gpc.addGeneratedProperty("delete", new PropertyValueGenerator<String>() {
+        gpc.addGeneratedProperty(COL_DELETE, new PropertyValueGenerator<String>() {
             @Override
             public String getValue(Item item, Object itemId, Object propertyId) {
                 return getMessage("wordListView.words.delete"); // The caption
