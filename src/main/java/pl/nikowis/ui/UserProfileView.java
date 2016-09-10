@@ -35,6 +35,7 @@ import pl.nikowis.ui.base.I18nCustomComponent;
 public class UserProfileView extends I18nCustomComponent implements View {
 
     public static final String VIEW_NAME = "userProfile";
+    private final String DELETE_STYLE = "delete";
 
     @Autowired
     private SessionService sessionService;
@@ -50,7 +51,7 @@ public class UserProfileView extends I18nCustomComponent implements View {
 
     private TextField username, totalScore, quizesCompleted, totalWords;
     private PasswordField oldPassword, newPassword, newPasswordRepeat;
-    private Button submit;
+    private Button submit, delete;
 
     private User currentUser;
 
@@ -72,7 +73,7 @@ public class UserProfileView extends I18nCustomComponent implements View {
         userInfoLayout.setCaption(getMessage("userProfileView.userInfoLayout"));
         userInfoLayout.setEnabled(false);
 
-        VerticalLayout fields = new VerticalLayout(userInfoLayout, passwordsLayout, submit);
+        VerticalLayout fields = new VerticalLayout(userInfoLayout, passwordsLayout, submit, delete);
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -86,6 +87,10 @@ public class UserProfileView extends I18nCustomComponent implements View {
     private void initializeComponents() {
         submit = new Button(getMessage("userProfileView.submitPassword"));
         submit.addClickListener(clickEvent -> submitNewPassword());
+        
+        delete = new Button(getMessage("userProfileView.deleteProfile"));
+        delete.addClickListener(clickEvent -> deleteAccount());
+        delete.addStyleName(DELETE_STYLE);
 
         oldPassword = new PasswordField(getMessage("userProfileView.oldPassword"));
         oldPassword.setRequired(true);
@@ -101,6 +106,16 @@ public class UserProfileView extends I18nCustomComponent implements View {
         totalScore = new TextField(getMessage("userProfileView.totalScore"));
         quizesCompleted = new TextField(getMessage("userProfileView.quizesCompleted"));
         totalWords = new TextField(getMessage("userProfileView.totalWords"));
+    }
+
+    private void deleteAccount() {
+        userService.deleteUser(currentUser);
+        sessionService.eraseUser();
+        redirect(LoginView.VIEW_NAME);
+    }
+
+    private void redirect(String viewName) {
+        getUI().getNavigator().navigateTo(viewName);
     }
 
     private void submitNewPassword() {
