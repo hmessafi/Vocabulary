@@ -37,10 +37,35 @@ public interface WordService {
     /**
      * Finds the list of 10 words with least progress.
      *
-     * @param userId words owner.
-     * @return list of words.
+     * @param userId words owner
+     * @return list of words
      */
     List<Word> findWorstWords(Long userId);
+
+    /**
+     * Finds the list of 10 words with best progress.
+     *
+     * @param userId words owner
+     * @return list of words
+     */
+    List<Word> findBestWords(Long userId);
+
+    /**
+     * Finds the list of 10 most recently added words.
+     *
+     * @param userId words owner
+     * @return list of words
+     */
+    List<Word> findLatestWords(Long userId);
+
+    /**
+     * Finds the list of n random words.
+     *
+     * @param userId words owner
+     * @param count number of words
+     * @return list of words
+     */
+    List<Word> findRandomWords(Long userId, int count);
 
     /**
      * Counts user words.
@@ -52,8 +77,9 @@ public interface WordService {
 
     /**
      * Counts all the points from every user word.
+     *
      * @param userId user userId
-     * @return
+     * @return sum of points from every word
      */
     Long getTotalScore(Long userId);
 }

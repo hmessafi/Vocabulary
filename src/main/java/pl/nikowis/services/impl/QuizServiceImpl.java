@@ -10,7 +10,6 @@ import pl.nikowis.repositories.QuizRepository;
 import pl.nikowis.repositories.WordRepository;
 import pl.nikowis.services.QuizService;
 import pl.nikowis.services.SessionService;
-import pl.nikowis.services.WordService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,17 +32,17 @@ public class QuizServiceImpl implements QuizService {
     private SessionService sessionService;
 
     @Override
-    public Quiz createQuiz() {
+    public Quiz createQuiz(List<Word> wordList) {
+        Preconditions.checkNotNull(wordList);
         Quiz quiz = new Quiz();
         quiz.setUser(sessionService.getUser());
-        quiz.setAnswers(createQuizAnswers());
+        quiz.setAnswers(createQuizAnswers(wordList));
         return quiz;
     }
 
-    private List<QuizAnswer> createQuizAnswers() {
+    private List<QuizAnswer> createQuizAnswers(List<Word> wordList) {
         List<QuizAnswer> answers = new ArrayList<>();
-        List<Word> words = wordRepository.findTop10ByUserIdOrderByProgressAsc(sessionService.getUser().getId());
-        for(Word w : words) {
+        for(Word w : wordList) {
             answers.add(new QuizAnswer(w));
         }
         return answers;

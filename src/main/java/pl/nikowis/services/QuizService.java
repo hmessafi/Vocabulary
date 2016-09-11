@@ -1,6 +1,9 @@
 package pl.nikowis.services;
 
 import pl.nikowis.entities.Quiz;
+import pl.nikowis.entities.Word;
+
+import java.util.List;
 
 /**
  * Service for quizes.
@@ -12,8 +15,9 @@ public interface QuizService {
     /**
      * Creates and fills up a new Quiz instance.
      * @return quiz
+     * @param wordList list of words to use
      */
-    Quiz createQuiz();
+    Quiz createQuiz(List<Word> wordList);
 
     /**
      * Saves a quiz.

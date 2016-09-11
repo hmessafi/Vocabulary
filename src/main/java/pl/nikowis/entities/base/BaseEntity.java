@@ -18,7 +18,7 @@ import javax.persistence.Version;
 public abstract class BaseEntity {
 
     @Column(nullable = true)
-    private Date createdDate;
+    private Date createDate;
 
     @Column(nullable = true)
     private Date lastModifiedDate;
@@ -27,12 +27,12 @@ public abstract class BaseEntity {
     @Version
     private Long version;
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Date getLastModifiedDate() {
@@ -54,7 +54,7 @@ public abstract class BaseEntity {
     @PrePersist
     void prePersist() {
         Date date = new Date();
-        createdDate = date;
+        createDate = date;
         lastModifiedDate = date;
     }
 
