@@ -76,11 +76,9 @@ public class LoginView extends I18nCustomComponent implements View {
 
     private void initalizeComponents() {
         username = new TextField(getMessage("loginView.username"));
-        username.setWidth("300px");
         username.setRequired(true);
 
         password = new PasswordField(getMessage("loginView.password"));
-        password.setWidth("300px");
         password.setRequired(true);
         password.setValue("");
         password.setNullRepresentation("");
