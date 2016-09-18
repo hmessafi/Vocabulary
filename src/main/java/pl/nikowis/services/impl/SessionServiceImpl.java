@@ -40,6 +40,9 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public boolean hasRole(String roleName) {
         User user = getUser();
+        if(user == null) {
+            return false;
+        }
         return user.getRole().getName().equals(roleName);
     }
 

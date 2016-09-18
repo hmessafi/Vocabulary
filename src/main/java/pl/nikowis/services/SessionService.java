@@ -29,7 +29,7 @@ public interface SessionService {
      * Checks if the user in the session has the specified role.
      * Use UserRoles class for getting role names.
      * @param roleName name of the role
-     * @return result
+     * @return result or null if user is not logged in
      */
     boolean hasRole(String roleName);
 }

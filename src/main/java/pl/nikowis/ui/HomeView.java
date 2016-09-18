@@ -56,7 +56,7 @@ public class HomeView extends I18nCustomComponent implements View {
         greeting = new Label();
         logout = new Button(getMessage("homeView.logout"));
 
-        logout.addClickListener(clickEvent -> eraseFromSessionAndRedirect());
+        logout.addClickListener(clickEvent -> logoutAndRedirect());
 
         quiz = new Button(getMessage("homeView.quiz"));
         quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
@@ -86,7 +86,7 @@ public class HomeView extends I18nCustomComponent implements View {
         getUI().getNavigator().navigateTo(viewName);
     }
 
-    private void eraseFromSessionAndRedirect() {
+    private void logoutAndRedirect() {
         sessionService.eraseUser();
         redirect(LoginView.VIEW_NAME);
     }

@@ -27,20 +27,30 @@ public class Header extends I18nCustomComponent implements InitializableComponen
     @Autowired
     private SessionService sessionService;
 
+    @Autowired
+    private Menu menu;
+
     @Override
     public void initializeComponent() {
         VerticalLayout mainLayout = new VerticalLayout();
         HorizontalLayout components = new HorizontalLayout();
         Label title = new Label(getMessage("header.title"));
 
-        components.addComponent(title);
+        menu.initializeComponent();
+
+        components.addComponents(menu, title);
+        components.setComponentAlignment(menu, Alignment.MIDDLE_LEFT);
         components.setSpacing(true);
-        components.setSizeUndefined();
+        components.setSizeFull();
 
         mainLayout.addComponent(components);
         mainLayout.setSizeFull();
         mainLayout.setComponentAlignment(components, Alignment.MIDDLE_CENTER);
         mainLayout.setStyleName(HEADER_STYLE);
         setCompositionRoot(mainLayout);
+    }
+
+    public void refreshMenu() {
+        menu.refresh();
     }
 }

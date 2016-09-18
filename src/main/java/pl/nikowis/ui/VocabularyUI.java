@@ -2,21 +2,18 @@ package pl.nikowis.ui;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
-import javafx.scene.layout.Pane;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.exceptions.base.BusinessException;
 import pl.nikowis.exceptions.base.TechnicalException;
@@ -53,6 +50,10 @@ public class VocabularyUI extends UI {
     final private VerticalLayout mainLayout = new VerticalLayout();
     final private VerticalLayout viewLayout = new VerticalLayout();
 
+    public Header getHeader() {
+        return header;
+    }
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         footer.initializeComponent();
@@ -74,6 +75,18 @@ public class VocabularyUI extends UI {
             getNavigator().navigateTo(LoginView.VIEW_NAME);
         }
         setContent(mainPanel);
+
+        navigator.addViewChangeListener(new ViewChangeListener() {
+            @Override
+            public boolean beforeViewChange(ViewChangeEvent viewChangeEvent) {
+                return true;
+            }
+
+            @Override
+            public void afterViewChange(ViewChangeEvent viewChangeEvent) {
+                ((VocabularyUI) (getUI())).getHeader().refreshMenu();
+            }
+        });
 
         VaadinSession.getCurrent().setErrorHandler(new ErrorHandler() {
 
@@ -103,5 +116,6 @@ public class VocabularyUI extends UI {
             }
 
         });
+
     }
 }
