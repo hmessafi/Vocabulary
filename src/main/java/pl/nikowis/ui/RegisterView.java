@@ -5,6 +5,7 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
@@ -77,7 +78,7 @@ public class RegisterView extends I18nCustomComponent implements View {
         password.setRequired(true);
         repeatPassword = new PasswordField(getMessage("registerView.passwordRepeat"));
         repeatPassword.setRequired(true);
-        submit = new Button(getMessage("registerView.submit"));
+        submit = new Button(getMessage("registerView.submit"), FontAwesome.CHECK);
         submit.addClickListener(clickEvent -> submitAndRedirect());
         user = new User();
 

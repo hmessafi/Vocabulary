@@ -2,6 +2,7 @@ package pl.nikowis.ui;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
@@ -31,7 +32,6 @@ public class HomeView extends I18nCustomComponent implements View {
     @Autowired
     private WordService wordService;
 
-    private Label greeting;
     private Button logout, wordList, quiz, userList, userProfile;
 
     private User user;
@@ -40,7 +40,15 @@ public class HomeView extends I18nCustomComponent implements View {
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         initializeComponents();
         setSizeFull();
-        VerticalLayout fields = new VerticalLayout(greeting, logout, wordList, quiz, userList, userProfile);
+        VerticalLayout fields = new VerticalLayout(logout, wordList, quiz, userList, userProfile);
+        user = sessionService.getUser();
+        if (user != null) {
+            fields.setCaption(getI18n().getMessage(
+                    "homeView.greeting"
+                    , new Object[]{user.getUsername()}
+                    , getLocale())
+            );
+        }
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -53,32 +61,22 @@ public class HomeView extends I18nCustomComponent implements View {
     }
 
     private void initializeComponents() {
-        greeting = new Label();
-        logout = new Button(getMessage("homeView.logout"));
+        logout = new Button(getMessage("homeView.logout"), FontAwesome.SIGN_OUT);
 
         logout.addClickListener(clickEvent -> logoutAndRedirect());
 
-        quiz = new Button(getMessage("homeView.quiz"));
+        quiz = new Button(getMessage("homeView.quiz"), FontAwesome.PLAY_CIRCLE);
         quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
-        boolean userHasAnyWords = wordService.count(sessionService.getUser().getId()) > 0 ;
+        boolean userHasAnyWords = wordService.count(sessionService.getUser().getId()) > 0;
         quiz.setVisible(userHasAnyWords);
 
-        wordList = new Button(getMessage("homeView.wordList"));
+        wordList = new Button(getMessage("homeView.wordList"), FontAwesome.LIST);
         wordList.addClickListener(clickEvent -> redirect(WordListView.VIEW_NAME));
 
-        user = sessionService.getUser();
-        if (user != null) {
-            greeting.setValue(getI18n().getMessage(
-                    "homeView.greeting"
-                    , new Object[]{user.getUsername()}
-                    , getLocale())
-            );
-        }
-
-        userList = new Button(getMessage("homeView.userList"));
+        userList = new Button(getMessage("homeView.userList"), FontAwesome.USERS);
         userList.addClickListener(clickEvent -> redirect(UserListView.VIEW_NAME));
         userList.setVisible(sessionService.hasRole(UserRoles.ROLE_ADMIN));
-        userProfile = new Button(getMessage("homeView.userProfile"));
+        userProfile = new Button(getMessage("homeView.userProfile"), FontAwesome.USER);
         userProfile.addClickListener(clickEvent -> redirect(UserProfileView.VIEW_NAME));
     }
 

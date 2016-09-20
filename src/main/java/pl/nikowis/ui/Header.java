@@ -34,14 +34,11 @@ public class Header extends I18nCustomComponent implements InitializableComponen
     public void initializeComponent() {
         VerticalLayout mainLayout = new VerticalLayout();
         HorizontalLayout components = new HorizontalLayout();
-        Label title = new Label(getMessage("header.title"));
 
         menu.initializeComponent();
 
-        components.addComponents(menu, title);
-        components.setComponentAlignment(menu, Alignment.MIDDLE_LEFT);
+        components.addComponents(menu);
         components.setSpacing(true);
-        components.setSizeFull();
 
         mainLayout.addComponent(components);
         mainLayout.setSizeFull();

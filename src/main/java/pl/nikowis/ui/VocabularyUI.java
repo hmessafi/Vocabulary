@@ -4,6 +4,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
@@ -97,17 +99,22 @@ public class VocabularyUI extends UI {
                         //final cause
                         String exceptionClassName = t.getClass().getSimpleName();
                         if (t instanceof BusinessException) {
-                            Notification.show(
+                            Notification notification = new Notification(
                                     i18n.getMessage("BusinessException.title", getLocale()) + "\n"
                                             + i18n.getMessage(exceptionClassName + ".description", getLocale())
                                     , Notification.Type.ERROR_MESSAGE
                             );
+                            notification.setIcon(FontAwesome.TIMES_CIRCLE);
+                            notification.show(Page.getCurrent());
+
                         } else if (t instanceof TechnicalException) {
-                            Notification.show(
-                                    i18n.getMessage("TechnicalException.title", getLocale())
-                                            + t.toString()
+                            Notification notification = new Notification(
+                                    i18n.getMessage("BusinessException.title", getLocale()) + "\n"
+                                            + i18n.getMessage(exceptionClassName + ".description", getLocale())
                                     , Notification.Type.ERROR_MESSAGE
                             );
+                            notification.setIcon(FontAwesome.TIMES_CIRCLE);
+                            notification.show(Page.getCurrent());
                         } else {
                             errorEvent.getThrowable().printStackTrace();
                         }

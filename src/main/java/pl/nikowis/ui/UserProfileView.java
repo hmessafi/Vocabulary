@@ -3,6 +3,7 @@ package pl.nikowis.ui;
 import com.google.gwt.thirdparty.guava.common.base.Strings;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
@@ -85,10 +86,10 @@ public class UserProfileView extends I18nCustomComponent implements View {
     }
 
     private void initializeComponents() {
-        submit = new Button(getMessage("userProfileView.submitPassword"));
+        submit = new Button(getMessage("userProfileView.submitPassword"), FontAwesome.CHECK);
         submit.addClickListener(clickEvent -> submitNewPassword());
         
-        delete = new Button(getMessage("userProfileView.deleteProfile"));
+        delete = new Button(getMessage("userProfileView.deleteProfile"), FontAwesome.TIMES);
         delete.addClickListener(clickEvent -> deleteAccount());
         delete.addStyleName(DELETE_STYLE);
 

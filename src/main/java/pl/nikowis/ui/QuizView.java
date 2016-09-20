@@ -4,6 +4,7 @@ package pl.nikowis.ui;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
@@ -70,13 +71,13 @@ public class QuizView extends I18nCustomComponent implements View {
     }
 
     private void initializeComponents() {
-        worstQuiz = new Button(getMessage("quizView.worstQuiz"));
+        worstQuiz = new Button(getMessage("quizView.worstQuiz"), FontAwesome.EXCLAMATION_TRIANGLE);
         worstQuiz.addClickListener(clickEvent -> worstQuiz());
-        bestQuiz = new Button(getMessage("quizView.bestQuiz"));
+        bestQuiz = new Button(getMessage("quizView.bestQuiz"), FontAwesome.CHECK_SQUARE_O);
         bestQuiz.addClickListener(clickEvent -> bestQuiz());
-        latestQuiz = new Button(getMessage("quizView.latestQuiz"));
+        latestQuiz = new Button(getMessage("quizView.latestQuiz"), FontAwesome.CLOCK_O);
         latestQuiz.addClickListener(clickEvent -> latestQuiz());
-        randomQuiz = new Button(getMessage("quizView.randomQuiz"));
+        randomQuiz = new Button(getMessage("quizView.randomQuiz"), FontAwesome.RANDOM);
         randomQuiz.addClickListener(clickEvent -> randomQuiz());
     }
 

@@ -1,6 +1,7 @@
 package pl.nikowis.ui;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.SpringView;
@@ -102,12 +103,12 @@ public class QuizForm extends I18nCustomComponent {
         translated = new TextField();
         translated.setCaption(getMessage("quizForm.translated"));
 
-        finish = new Button(getMessage("quizForm.finish"));
+        finish = new Button(getMessage("quizForm.finish"), FontAwesome.CHECK_CIRCLE);
         finish.addClickListener(clickEvent -> finishQuiz());
 
-        quit = new Button(getMessage("quizForm.quit"));
+        quit = new Button(getMessage("quizForm.quit"), FontAwesome.BAN);
         quit.addClickListener(clickEvent -> quitQuiz());
-        next = new Button(getMessage("quizForm.next"));
+        next = new Button(getMessage("quizForm.next"), FontAwesome.ARROW_RIGHT);
         next.addClickListener(clickEvent -> goToNext());
 
         if (allWordsCount < 2) {

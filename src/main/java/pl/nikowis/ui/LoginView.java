@@ -4,6 +4,7 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
@@ -83,10 +84,10 @@ public class LoginView extends I18nCustomComponent implements View {
         password.setValue("");
         password.setNullRepresentation("");
 
-        login = new Button(getMessage("loginView.login"));
+        login = new Button(getMessage("loginView.login"), FontAwesome.SIGN_IN);
         login.addClickListener(clickEvent -> commitAndAuthenticateUser());
 
-        register = new Button(getMessage("loginView.register"));
+        register = new Button(getMessage("loginView.register"), FontAwesome.USER);
         register.addClickListener(clickEvent -> redirect(RegisterView.VIEW_NAME));
 
         user = new User();

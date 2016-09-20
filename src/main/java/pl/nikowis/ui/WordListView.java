@@ -9,6 +9,7 @@ import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
@@ -20,10 +21,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ProgressBarRenderer;
 import com.vaadin.ui.themes.Reindeer;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import elemental.json.JsonValue;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.entities.Word;
 import pl.nikowis.exceptions.EmptyFieldException;
@@ -53,7 +52,7 @@ public class WordListView extends I18nCustomComponent implements View {
 
     private Grid words;
     private TextField original, translated;
-    private Button submit, home;
+    private Button submit;
     private FieldGroup fieldGroup;
 
     private Word word;
@@ -68,7 +67,7 @@ public class WordListView extends I18nCustomComponent implements View {
         addWordForm.setCaption(getMessage("wordListView.addWordForm.title"));
         addWordForm.setSpacing(true);
 
-        VerticalLayout wordsFormAndGrid = new VerticalLayout(addWordForm, submit, words, home);
+        VerticalLayout wordsFormAndGrid = new VerticalLayout(addWordForm, submit, words);
         wordsFormAndGrid.setSpacing(true);
         wordsFormAndGrid.setMargin(new MarginInfo(true, true, true, false));
         wordsFormAndGrid.setSizeUndefined();
@@ -85,9 +84,6 @@ public class WordListView extends I18nCustomComponent implements View {
         user = sessionService.getUser();
         word.setUser(user);
 
-        home = new Button(getMessage("wordListView.home"));
-        home.addClickListener(clickEvent -> redirect(HomeView.VIEW_NAME));
-
         original = new TextField(getMessage("wordListView.original"));
         original.setValidationVisible(false);
         original.addValidator(o -> checkNotEmpty((String) o));
@@ -96,7 +92,7 @@ public class WordListView extends I18nCustomComponent implements View {
         translated.setValidationVisible(false);
         translated.addValidator(o -> checkNotEmpty((String) o));
         translated.setNullRepresentation("");
-        submit = new Button(getMessage("wordListView.submit"));
+        submit = new Button(getMessage("wordListView.submit"), FontAwesome.PLUS);
         submit.addClickListener(clickEvent -> commitFieldGroup());
 
         BeanItem<Word> bean = new BeanItem<Word>(word);

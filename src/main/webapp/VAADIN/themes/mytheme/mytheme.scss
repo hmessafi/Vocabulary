@@ -1,46 +1,60 @@
 @import "../valo/valo.scss";
 
 @mixin mytheme {
-    @include valo;
+  @include valo;
 
-    .v-grid-row > td {
-        background: none;
-    }
+  .v-grid-row > td {
+    background: none;
+  }
 
-    .v-grid-cell {
-        background: none;
-    }
+  .v-grid-cell {
+    background: none;
+  }
 
-    .v-grid-row > th {
-        background: none;
-    }
+  .v-grid-row > th {
+    background: none;
+  }
 
-    .highlight-red {
-        background: lightcoral;
-    }
+  .highlight-red {
+    background: lightcoral;
+  }
 
-    .highlight-green {
-        background: lightgreen;
-    }
+  .highlight-green {
+    background: lightgreen;
+  }
 
-    .v-progressbar-indicator {
-        background: #0dca0d;
-    }
+  .v-progressbar-indicator {
+    background: #0dca0d;
+  }
 
-    .myHeader {
-        background: lightgray;
-        height:50px;
-    }
+  .v-captiontext {
+    font-size: 18px;
+    font-weight: bold;
+  }
 
-    .myFooter {
-        background: lightgray;
-        position: fixed;
-        bottom: 0px;
-        left: 0px;
-        height:50px;
-    }
+  .myHeader {
+    background: lightgray;
+    height: 50px;
 
-    .delete {
-        background : red;
-    }
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+
+  }
+
+  .myFooter {
+    background: lightgray;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    height: 50px;
+    font-weight: normal;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .delete {
+    color: red;
+    font-weight: bold;
+  }
 }
