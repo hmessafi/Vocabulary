@@ -70,7 +70,8 @@ public class WordServiceImpl implements WordService {
         while (count > 0) {
             count--;
             allWordsCount = allWords.size();
-            if (allWordsCount == 0) {
+            if (allWordsCount == 1) {
+                selectedWords.add(allWords.remove(0));
                 break;
             }
             selectedWords.add(allWords.remove(rand.nextInt(allWordsCount-1)));

@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
 @SpringComponent
 public class DatabaseInitializer {
 
-    private final int TOTAL_WORDS = 15;
+    private final int TOTAL_WORDS = 5;
 
     @Autowired
     private RoleService roleService;
