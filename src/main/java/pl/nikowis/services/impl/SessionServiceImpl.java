@@ -6,11 +6,12 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.WrappedSession;
 import org.springframework.stereotype.Service;
 import pl.nikowis.entities.User;
-import pl.nikowis.security.UserRoles;
 import pl.nikowis.services.SessionService;
 
 /**
  * Created by nikowis on 2016-08-05.
+ *
+ * @author nikowis
  */
 @Service
 public class SessionServiceImpl implements SessionService {

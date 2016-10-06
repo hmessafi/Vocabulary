@@ -1,5 +1,7 @@
 package pl.nikowis.entities;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,10 +12,10 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-import pl.nikowis.entities.base.BaseEntity;
-
 /**
  * Created by nikowis on 2016-07-27.
+ *
+ * @author nikowis
  */
 @Entity
 public class User extends BaseEntity {

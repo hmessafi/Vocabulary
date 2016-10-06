@@ -1,13 +1,13 @@
 package pl.nikowis.entities;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-
-import pl.nikowis.entities.base.BaseEntity;
 
 /**
  * Word entity.

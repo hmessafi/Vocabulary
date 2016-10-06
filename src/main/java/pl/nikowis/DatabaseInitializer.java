@@ -2,8 +2,6 @@ package pl.nikowis;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.nikowis.entities.Role;
 import pl.nikowis.entities.User;
 import pl.nikowis.entities.Word;

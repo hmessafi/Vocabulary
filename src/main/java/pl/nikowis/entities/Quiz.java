@@ -2,6 +2,7 @@ package pl.nikowis.entities;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import pl.nikowis.entities.base.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
-
-import pl.nikowis.entities.base.BaseEntity;
 
 /**
  * Quiz database representation.

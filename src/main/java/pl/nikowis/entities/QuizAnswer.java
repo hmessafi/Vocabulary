@@ -1,12 +1,12 @@
 package pl.nikowis.entities;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
-import pl.nikowis.entities.base.BaseEntity;
 
 /**
  * Single answer in quiz database representation.

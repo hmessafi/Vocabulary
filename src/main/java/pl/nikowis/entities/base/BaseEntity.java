@@ -1,12 +1,11 @@
 package pl.nikowis.entities.base;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Version;
+import java.util.Date;
 
 /**
  * Base entity. Manages creation and update date as well as versioning of entities.
@@ -60,7 +59,6 @@ public abstract class BaseEntity {
 
     @PreUpdate
     void preUpdate() {
-        Date date = new Date();
-        lastModifiedDate = date;
+        lastModifiedDate = new Date();
     }
 }

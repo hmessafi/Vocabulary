@@ -116,8 +116,7 @@ public class LoginView extends I18nCustomComponent implements View {
     }
 
     private boolean authenticateUser() {
-        User dbUser = userService.authenticateUser(user);
-        user = dbUser;
+        user = userService.authenticateUser(user);
         return true;
     }
 }

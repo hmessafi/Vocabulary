@@ -1,11 +1,11 @@
 package pl.nikowis.entities;
 
+import pl.nikowis.entities.base.BaseEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import pl.nikowis.entities.base.BaseEntity;
 
 /**
  * Entity for roles.

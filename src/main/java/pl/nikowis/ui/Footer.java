@@ -1,12 +1,10 @@
 package pl.nikowis.ui;
 
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-
 import pl.nikowis.ui.base.I18nCustomComponent;
 import pl.nikowis.ui.base.InitializableComponent;
 
