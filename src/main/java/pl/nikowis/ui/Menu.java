@@ -39,7 +39,7 @@ public class Menu extends I18nCustomComponent implements InitializableComponent 
         links = bar.addItem(getMessage("header.title"), FontAwesome.ARROW_DOWN, null);
         home = links.addItem(getMessage("menu.home"), FontAwesome.HOME, menuItem -> redirect(HomeView.VIEW_NAME));
         quizes = links.addItem(getMessage("menu.quizes"), FontAwesome.PLAY_CIRCLE, menuItem -> redirect(QuizView.VIEW_NAME));
-        profile = links.addItem(getMessage("menu.profiles"), FontAwesome.USER, menuItem -> redirect(UserProfileView.VIEW_NAME));
+        profile = links.addItem(getMessage("menu.profile"), FontAwesome.USER, menuItem -> redirect(UserProfileView.VIEW_NAME));
         words = links.addItem(getMessage("menu.words"), FontAwesome.LIST, menuItem -> redirect(WordListView.VIEW_NAME));
         users = links.addItem(getMessage("menu.users"), FontAwesome.USERS, menuItem -> redirect(UserListView.VIEW_NAME));
         logout = links.addItem(getMessage("menu.logout"), FontAwesome.SIGN_OUT, menuItem -> logoutAndRedirect());
