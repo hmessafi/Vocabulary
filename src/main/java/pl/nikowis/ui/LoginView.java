@@ -5,14 +5,11 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.services.SessionService;
@@ -53,24 +50,16 @@ public class LoginView extends I18nCustomComponent implements View {
 
         initalizeComponents();
 
-        setSizeFull();
-
-        VerticalLayout fields = new VerticalLayout(
+        CssLayout mainLayout = new CssLayout(
                 username
                 , password
                 , login
                 , register
         );
 
-        fields.setCaption(getMessage("loginView.title"));
-        fields.setSpacing(true);
-        fields.setMargin(new MarginInfo(true, true, true, false));
-        fields.setSizeUndefined();
+        mainLayout.addStyleName("login");
 
-        VerticalLayout mainLayout = new VerticalLayout(fields);
-        mainLayout.setSizeFull();
-        mainLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        this.setCaption(getMessage("loginView.title"));
         setCompositionRoot(mainLayout);
         username.focus();
     }

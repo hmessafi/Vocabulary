@@ -63,6 +63,7 @@ public class WordServiceImpl implements WordService {
     @Override
     public List<Word> findRandomWords(Long userId, int count) {
         Preconditions.checkNotNull(userId);
+        //todo: optimize that code ( find word count then draw random numbers and do a single select )
         List<Word> allWords = wordsRepository.findByUserId(userId);
         int allWordsCount;
         List<Word> selectedWords = new ArrayList<>();

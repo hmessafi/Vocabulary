@@ -4,12 +4,9 @@ package pl.nikowis.ui;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.CssLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.Word;
 import pl.nikowis.services.SessionService;
@@ -41,7 +38,7 @@ public class QuizView extends I18nCustomComponent implements View {
 
     private Button worstQuiz, bestQuiz, latestQuiz, randomQuiz;
 
-    private VerticalLayout mainLayout, buttons;
+    private CssLayout mainLayout, buttons;
     private List<Word> wordList;
     private Long currentUserId;
 
@@ -49,22 +46,18 @@ public class QuizView extends I18nCustomComponent implements View {
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         initializeComponents();
         currentUserId = sessionService.getUser().getId();
-        buttons = new VerticalLayout(
+        buttons = new CssLayout(
                 worstQuiz
                 , bestQuiz
                 , latestQuiz
                 , randomQuiz
         );
 
-        buttons.setCaption(getMessage("quizView.title"));
-        buttons.setSpacing(true);
-        buttons.setMargin(new MarginInfo(true, true, true, false));
-        buttons.setSizeUndefined();
+        buttons.setCaption(getMessage("quizView.buttons.title"));
 
-        mainLayout = new VerticalLayout(buttons);
-        mainLayout.setSizeFull();
-        mainLayout.setComponentAlignment(buttons, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        this.setCaption(getMessage("quizView.title"));
+
+        mainLayout = new CssLayout(buttons);
         setCompositionRoot(mainLayout);
     }
 

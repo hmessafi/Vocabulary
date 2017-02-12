@@ -10,12 +10,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
-import com.vaadin.ui.Alignment;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.exceptions.base.BusinessException;
 import pl.nikowis.exceptions.base.TechnicalException;
@@ -33,6 +30,8 @@ import pl.nikowis.services.SessionService;
 @SpringUI
 public class VocabularyUI extends UI {
 
+    public static final String VIEW_LAYOUT_STYLE = "view-layout";
+
     @Autowired
     private SpringViewProvider viewProvider;
 
@@ -48,9 +47,8 @@ public class VocabularyUI extends UI {
     @Autowired
     private Footer footer;
 
-    final private Panel mainPanel = new Panel();
-    final private VerticalLayout mainLayout = new VerticalLayout();
-    final private VerticalLayout viewLayout = new VerticalLayout();
+    final private CssLayout mainLayout = new CssLayout();
+    final private CssLayout viewLayout = new CssLayout();
 
     public Header getHeader() {
         return header;
@@ -60,23 +58,17 @@ public class VocabularyUI extends UI {
     protected void init(VaadinRequest vaadinRequest) {
         footer.initializeComponent();
         header.initializeComponent();
-        mainPanel.setSizeFull();
-        mainLayout.setSpacing(true);
-        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
         mainLayout.addComponents(header, viewLayout, footer);
-        mainLayout.setComponentAlignment(footer, Alignment.BOTTOM_CENTER);
-        mainLayout.setComponentAlignment(header, Alignment.TOP_CENTER);
-        mainLayout.setComponentAlignment(viewLayout, Alignment.MIDDLE_CENTER);
+        viewLayout.addStyleName(VIEW_LAYOUT_STYLE);
         Navigator navigator = new Navigator(this, viewLayout);
         this.setNavigator(navigator);
         getNavigator().addProvider(viewProvider);
-        mainPanel.setContent(mainLayout);
         if (sessionService.getUser() != null) {
             getNavigator().navigateTo(HomeView.VIEW_NAME);
         } else {
             getNavigator().navigateTo(LoginView.VIEW_NAME);
         }
-        setContent(mainPanel);
+        setContent(mainLayout);
 
         navigator.addViewChangeListener(new ViewChangeListener() {
             @Override

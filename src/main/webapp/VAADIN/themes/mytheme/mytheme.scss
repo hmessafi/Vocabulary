@@ -3,58 +3,125 @@
 @mixin mytheme {
   @include valo;
 
-  .v-grid-row > td {
-    background: none;
-  }
+  $first-level-font-size:20px;
+  $second-level-font-size:18px;
+  $default-font-size:16px;
 
-  .v-grid-cell {
-    background: none;
-  }
+  $failed-word-color:lightcoral;
+  $success-word-color:lightgreen;
+  $progress-bar-color:#0dca0d;
+  $danger-color:red;
 
-  .v-grid-row > th {
-    background: none;
-  }
+  text-align: center;
+  margin: auto;
+  padding: 5px;
+  box-sizing: border-box;
+  font-size: $default-font-size;
 
-  .highlight-red {
-    background: lightcoral;
-  }
 
-  .highlight-green {
-    background: lightgreen;
-  }
+  .v-ui {
+    //background:;
+    >.v-csslayout {
+      background: #f0f9ff;
+      background: -moz-linear-gradient(top, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%);
+      background: -webkit-linear-gradient(top, #f0f9ff 0%,#cbebff 47%,#a1dbff 100%);
+      background: linear-gradient(to bottom, #f0f9ff 0%,#cbebff 47%,#a1dbff 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', endColorstr='#a1dbff',GradientType=0 );
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      width:90%;
+      min-height:95%;
+    }
 
-  .v-progressbar-indicator {
-    background: #0dca0d;
-  }
-
-  .v-captiontext {
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  .myHeader {
-    background: lightgray;
-    height: 50px;
-
+    .v-widget {
+      box-sizing: border-box;
+      display: inline-block;
+      margin: 5px;
       text-align: center;
-      font-size: 24px;
+      white-space: normal;
+    }
+
+    .v-caption {
+      display: block;
+      font-size:$default-font-size;
+    }
+
+    .view-layout {
+
+      //box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+      > .v-caption {
+        font-size: $first-level-font-size;
+        font-weight: bold;
+      }
+
+      > .v-customcomponent > .v-layout > .v-caption {
+        font-size: $second-level-font-size;
+      }
+
+    }
+
+    .header .v-menubar-submenu-indicator + .v-menubar-menuitem-caption:after {
+      display:none;
+    }
+
+    .register-view .v-button,
+    .profile-view .v-button,
+    .profile-view-password .v-widget,
+    .home-view .v-widget,
+    .login .v-widget,
+    .quiz-view .v-button {
+        display:block;
+    }
+
+    .add-word-form {
+      width: 100%;
+      padding-bottom: 15px;
+      .v-caption {
+        display: inline-block;
+      }
+      .v-textfield {
+        vertical-align: middle;
+      }
+    }
+
+    .v-grid-tablewrapper {
+      .v-grid-row > td {
+        background: none;
+      }
+
+      .v-grid-cell {
+        background: none;
+      }
+
+      .v-grid-row > th {
+        background: none;
+      }
+
+      .failed-word {
+        background: $failed-word-color;
+      }
+
+      .success-word {
+        background: $success-word-color;
+      }
+    }
+
+    .v-progressbar-indicator {
+      background: $progress-bar-color;
+    }
+
+    .delete {
+      color: $danger-color;
       font-weight: bold;
+    }
 
-  }
+    .footer {
+      height: 100%;
+      //position:absolute;
+      //bottom:15px;
+      //right:0px;
+      //left:0px;
+    }
 
-  .myFooter {
-    background: lightgray;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    height: 50px;
-    font-weight: normal;
-    font-size: 15px;
-    text-align: center;
-  }
-
-  .delete {
-    color: red;
-    font-weight: bold;
   }
 }

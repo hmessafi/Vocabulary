@@ -2,16 +2,12 @@ package pl.nikowis.ui;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.Quiz;
 import pl.nikowis.entities.QuizAnswer;
@@ -31,8 +27,8 @@ import java.util.List;
 @SpringComponent
 public class QuizForm extends I18nCustomComponent {
 
-    private static final String SUCCESS_STYLE ="highlight-green";
-    private static final String FAILURE_STYLE ="highlight-red";
+    private static final String SUCCESS_STYLE ="success-word";
+    private static final String FAILURE_STYLE ="failed-word";
     private final String COL_ORIGINAL = "word.original";
     private final String COL_TRANSLATED = "word.translated";
     private final String COL_USER_ANSWER = "userAnswer";
@@ -69,22 +65,11 @@ public class QuizForm extends I18nCustomComponent {
         currentAnswer = quiz.getAnswer(answersDoneCounter);
 
         initializeComponents();
+        this.addStyleName("quiz-view");
+        CssLayout wordForm = new CssLayout(progressBar, original, translated);
+        wordForm.addStyleName("word-layout");
+        CssLayout mainLayout = new CssLayout(wordForm, next, finish, wordGrid, quit);
 
-        setSizeFull();
-
-        HorizontalLayout wordForm = new HorizontalLayout(original, translated);
-        wordForm.setSpacing(true);
-        wordForm.setSizeUndefined();
-
-        VerticalLayout fields = new VerticalLayout(progressBar, wordForm, next, finish, wordGrid, quit);
-        fields.setSpacing(true);
-        fields.setMargin(new MarginInfo(true, true, true, false));
-        fields.setSizeUndefined();
-
-        VerticalLayout mainLayout = new VerticalLayout(fields);
-        mainLayout.setSizeFull();
-        mainLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
         setCompositionRoot(mainLayout);
     }
 
@@ -92,7 +77,6 @@ public class QuizForm extends I18nCustomComponent {
         progressBar = new ProgressBar();
         progressBar.setCaption(getMessage("quizForm.progressBar"));
         progressBar.setValue(0.0f);
-        progressBar.setWidthUndefined();
         setupGrid();
 
         original = new TextField();

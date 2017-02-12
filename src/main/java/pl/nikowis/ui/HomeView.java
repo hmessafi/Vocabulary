@@ -3,12 +3,9 @@ package pl.nikowis.ui;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.CssLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.security.UserRoles;
@@ -38,25 +35,19 @@ public class HomeView extends I18nCustomComponent implements View {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         initializeComponents();
-        setSizeFull();
-        VerticalLayout fields = new VerticalLayout(logout, wordList, quiz, userList, userProfile);
+
+        CssLayout mainLayout = new CssLayout(logout, wordList, quiz, userList, userProfile);
+        this.setCaption(getMessage("homeView.title"));
         user = sessionService.getUser();
         if (user != null) {
-            fields.setCaption(getI18n().getMessage(
+            mainLayout.setCaption(getI18n().getMessage(
                     "homeView.greeting"
                     , new Object[]{user.getUsername()}
                     , getLocale())
             );
         }
-        fields.setSpacing(true);
-        fields.setMargin(new MarginInfo(true, true, true, false));
-        fields.setSizeUndefined();
-        VerticalLayout mainLayout = new VerticalLayout(fields);
-        mainLayout.setSizeFull();
-        mainLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        mainLayout.addStyleName("home-view");
         setCompositionRoot(mainLayout);
-
     }
 
     private void initializeComponents() {
@@ -66,8 +57,6 @@ public class HomeView extends I18nCustomComponent implements View {
 
         quiz = new Button(getMessage("homeView.quiz"), FontAwesome.PLAY_CIRCLE);
         quiz.addClickListener(clickEvent -> redirect(QuizView.VIEW_NAME));
-        boolean userHasAnyWords = wordService.count(sessionService.getUser().getId()) > 0;
-        quiz.setVisible(userHasAnyWords);
 
         wordList = new Button(getMessage("homeView.wordList"), FontAwesome.LIST);
         wordList.addClickListener(clickEvent -> redirect(WordListView.VIEW_NAME));

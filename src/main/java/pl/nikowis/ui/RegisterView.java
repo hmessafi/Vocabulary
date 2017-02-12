@@ -6,14 +6,11 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.exceptions.EmptyFieldException;
@@ -48,24 +45,14 @@ public class RegisterView extends I18nCustomComponent implements View {
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         intializeComponents();
 
-        setSizeFull();
-
-        VerticalLayout fields = new VerticalLayout(
+        CssLayout mainLayout = new CssLayout(
                 username
                 , password
                 , repeatPassword
                 , submit
         );
-
-        fields.setCaption(getMessage("registerView.title"));
-        fields.setSpacing(true);
-        fields.setMargin(new MarginInfo(true, true, true, false));
-        fields.setSizeUndefined();
-
-        VerticalLayout mainLayout = new VerticalLayout(fields);
-        mainLayout.setSizeFull();
-        mainLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        this.addStyleName("register-view");
+        this.setCaption(getMessage("registerView.title"));
         setCompositionRoot(mainLayout);
     }
 

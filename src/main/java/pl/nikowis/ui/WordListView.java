@@ -10,17 +10,13 @@ import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ProgressBarRenderer;
-import com.vaadin.ui.themes.Reindeer;
 import elemental.json.JsonValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
@@ -62,20 +58,11 @@ public class WordListView extends I18nCustomComponent implements View {
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         initializeComponents();
 
-        setSizeFull();
-        HorizontalLayout addWordForm = new HorizontalLayout(original, translated);
+        CssLayout addWordForm = new CssLayout(original, translated, submit);
         addWordForm.setCaption(getMessage("wordListView.addWordForm.title"));
-        addWordForm.setSpacing(true);
-
-        VerticalLayout wordsFormAndGrid = new VerticalLayout(addWordForm, submit, words);
-        wordsFormAndGrid.setSpacing(true);
-        wordsFormAndGrid.setMargin(new MarginInfo(true, true, true, false));
-        wordsFormAndGrid.setSizeUndefined();
-
-        VerticalLayout mainLayout = new VerticalLayout(wordsFormAndGrid);
-        mainLayout.setSizeFull();
-        mainLayout.setComponentAlignment(wordsFormAndGrid, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        addWordForm.addStyleName("add-word-form");
+        CssLayout mainLayout = new CssLayout(addWordForm, words);
+        this.setCaption(getMessage("wordListView.title"));
         setCompositionRoot(mainLayout);
     }
 
@@ -101,7 +88,6 @@ public class WordListView extends I18nCustomComponent implements View {
 
         words = new Grid(getMessage("wordListView.words.title"));
         initializeGridContent();
-        words.setWidthUndefined();
         words.setSelectionMode(Grid.SelectionMode.NONE);
         setupGridColumns();
     }
@@ -164,6 +150,8 @@ public class WordListView extends I18nCustomComponent implements View {
         try {
             fieldGroup.commit();
         } catch (FieldGroup.CommitException e) {
+            //TODO: find and replace all sysouts with proper logging
+            //TODO: throw custom exception with a message from i18n
             System.out.println(e.getMessage());
             return;
         }

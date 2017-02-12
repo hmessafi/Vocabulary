@@ -1,11 +1,8 @@
 package pl.nikowis.ui;
 
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.CssLayout;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.nikowis.services.SessionService;
 import pl.nikowis.ui.base.I18nCustomComponent;
 import pl.nikowis.ui.base.InitializableComponent;
 
@@ -18,28 +15,17 @@ import pl.nikowis.ui.base.InitializableComponent;
 @SpringComponent
 public class Header extends I18nCustomComponent implements InitializableComponent{
 
-    private static final String HEADER_STYLE = "myHeader";
-
-    @Autowired
-    private SessionService sessionService;
+    private static final String HEADER_STYLE = "header";
 
     @Autowired
     private Menu menu;
 
     @Override
     public void initializeComponent() {
-        VerticalLayout mainLayout = new VerticalLayout();
-        HorizontalLayout components = new HorizontalLayout();
-
+        CssLayout mainLayout = new CssLayout();
         menu.initializeComponent();
-
-        components.addComponents(menu);
-        components.setSpacing(true);
-
-        mainLayout.addComponent(components);
-        mainLayout.setSizeFull();
-        mainLayout.setComponentAlignment(components, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName(HEADER_STYLE);
+        mainLayout.addComponents(menu);
+        this.setStyleName(HEADER_STYLE);
         setCompositionRoot(mainLayout);
     }
 

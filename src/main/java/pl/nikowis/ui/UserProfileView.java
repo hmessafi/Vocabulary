@@ -4,16 +4,12 @@ import com.google.gwt.thirdparty.guava.common.base.Strings;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.nikowis.entities.User;
 import pl.nikowis.exceptions.EmptyFieldException;
@@ -65,23 +61,18 @@ public class UserProfileView extends I18nCustomComponent implements View {
         totalWords.setValue(Long.toString(wordService.count(currentUser.getId())));
         totalScore.setValue(Long.toString(wordService.getTotalScore(currentUser.getId())));
 
-        setSizeFull();
-        HorizontalLayout passwordsLayout = new HorizontalLayout(oldPassword, newPassword, newPasswordRepeat);
+        CssLayout passwordsLayout = new CssLayout(oldPassword, newPassword, newPasswordRepeat, submit);
         passwordsLayout.setCaption(getMessage("userProfileView.passwordsLayout"));
-        passwordsLayout.setSpacing(true);
+        passwordsLayout.addStyleName("profile-view-password");
 
-        HorizontalLayout userInfoLayout = new HorizontalLayout(username, totalScore, quizesCompleted, totalWords);
+        CssLayout userInfoLayout = new CssLayout(username, totalScore, quizesCompleted, totalWords);
         userInfoLayout.setCaption(getMessage("userProfileView.userInfoLayout"));
         userInfoLayout.setEnabled(false);
 
-        VerticalLayout fields = new VerticalLayout(userInfoLayout, passwordsLayout, submit, delete);
-        fields.setSpacing(true);
-        fields.setMargin(new MarginInfo(true, true, true, false));
-        fields.setSizeUndefined();
-        VerticalLayout mainLayout = new VerticalLayout(fields);
-        mainLayout.setSizeFull();
-        mainLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        mainLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        this.setCaption(getMessage("userProfileView.title"));
+
+        CssLayout mainLayout = new CssLayout(userInfoLayout, passwordsLayout, delete);
+        mainLayout.addStyleName("profile-view");
         setCompositionRoot(mainLayout);
     }
 
@@ -110,6 +101,9 @@ public class UserProfileView extends I18nCustomComponent implements View {
     }
 
     private void deleteAccount() {
+        //TODO: it should be not possible to delete the current admin account from this view
+        //(there should always be at least one admin).
+        //
         userService.deleteUser(currentUser);
         sessionService.eraseUser();
         redirect(LoginView.VIEW_NAME);
